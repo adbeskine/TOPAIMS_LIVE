@@ -1,0 +1,595 @@
+{% extends "home/base.html" %}
+{% block title %}TopMarks - {{job.address}}{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+<div class="row">
+
+  <div class="col">
+  	<!-- PROFILE -->
+
+    <div class="card border-primary text-center bg-{{ profile_colour }}" id="Profile">
+
+    	<div class="card-header">
+    		<div class="container">
+    		<ul class="nav">
+    		  <li class="nav-item dropdown">
+    		  	<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="status_menu_toggle">Status</a>
+    		     <div class="dropdown-menu" id="status_menu">
+    		    	<a class="dropdown-item" id="Quote_status_change" href="{% url 'update_job' job.job_id 'quote' %}">Quote</a>
+    		    	<a class="dropdown-item" id="Ongoing_status_change" href="{% url 'update_job' job.job_id 'ongoing' %}">Ongoing</a>
+    		    	<a class="dropdown-item" id="Completed_status_change" href="{% url 'update_job' job.job_id 'completed' %}">Complete</a>
+    		      </div>
+    		  </li>
+    		</ul>
+    	  </div>
+    	</div>
+
+    	<div class="card-body">
+    		Name - {{ job.name }} <br>
+    		Email - {{ job.email }}<br>
+    		Phone - {{ job.phone }}<br>
+    		Quote
+    	</div>
+    	<div class="card-footer">
+    		{{ job.address }}
+    	</div>
+    </div>
+
+
+    <!-- NOTES -->
+
+    <div class="card border-primary text-center mb-5" id="notes_panel">
+
+    	<div class="card-header">
+    		<h3>NOTES</h3>
+    	</div>
+    	<div class="card-body">
+
+    		{% for note in notes %}
+    		<div class="card border-black text-center mb-2" id="Note_{{ note.pk }}">
+    			<div class="card-header">
+    				{{ note.Title }}
+    			</div>
+    			<div class="card-body">
+    				<p class="card-text"> {{ note.Text }} </p>
+    			</div>
+    		</div>
+    		{% endfor %}
+
+    		<!-- New note form -->
+    		<div class="card border-black text-center">
+    			<div class="card-header">
+    				NEW NOTE
+    			</div>
+    			<div class="card-body">
+    				<form action="{% url 'new_note' job.job_id %}" method="post" id="new_note_form">
+    				{% csrf_token %}
+    				{{ new_note_form }}
+    				<input type="Submit" value="Add Note" id="Add_note">
+    			  </form>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+
+  </div>
+
+
+  <div class="col">
+    <!-- SCHEDULE OF ITEMS -->
+
+
+    <div class="card border-primary text-center mb-5" id="schedule_of_items_panel">
+
+      <div class="card-header">
+        <h3>SCHEDULE OF ITEMS</h3>
+      </div>
+      <div class="card-body">
+
+        {% for SI in scheduled_items %}
+          {% if SI in needed_items %} 
+            <div class="card border-black text-center bg-success" id="schedule_item_{{ SI.pk }}">
+          {% endif %}
+          {% if SI not in needed_items %}
+            <div class="card border-black text-center " id="schedule_item_{{ SI.pk }}">
+          {% endif %}
+          <div class="card-body">
+            <p class="card-text"> {{ SI.description }} X {{ SI.quantity}} | 
+              
+              <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#date_form_modal_{{ SI.pk }}" id="schedule_item_{{ SI.pk }}_date">{{ SI.date_1}}</button> 
+
+            {% if SI.date_1 != SI.date_2 %}
+
+            - <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#date_form_modal"> {{ SI.date_2 }} </button> <!-- this button is here just so the styling looks the same -->
+            {% endif %} </p>
+          </div>
+        {% if SI in needed_items %} 
+        </div>
+        {% endif %}
+        {% if SI not in needed_items %}
+        </div>
+        {% endif %}
+
+        {% endfor %}
+
+        <!-- New item form -->
+        <div class="card border-black text-center">
+          <div class="card-header">
+            NEW ITEM
+          </div>
+          <div class="card-body">
+            <form action="{% url 'new_schedule_item' job.job_id %}" method="post" id="new_note_form">
+            {% csrf_token %}
+            {{ new_scheduled_item_form }}
+            <input type="Submit" value="Add" id="schedule_item_add_button">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div  class="col">
+    <!-- SITE MANAAGEMENT-->
+
+
+    <div class="card border-primary text-center" id="site_management_panel">
+
+      <div class="card_header">
+        <h3>SITE MANAGEMENT</h3>
+      </div>
+
+      <div class="card body">
+
+        <!-- TABLIST -->
+
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" href="#needed_panel" role="tab" data-toggle="tab" id="needed_panel_toggle">Needed Items</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#en_route_panel" role="tab" data-toggle="tab" id="en_route_panel_toggle">En-route</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#on_site_panel" role="tab" data-toggle="tab" id="on_site_panel_toggle">On-Site</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#PO_panel" role="tab" data-toggle="tab" id="PO_panel_toggle">P.O</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          <!-- NEEDED ITEMS  -->
+
+          <div role="tabpanel" class="tab-pane in active" id="needed_panel">
+
+            {% for NI in needed_items %}
+            <div class="card border-black text-center" id="needed_item_{{ NI.model}}_{{ NI.pk }}">
+              <div class="card-body">
+    
+                <!-- schedule items-->
+                {% if NI.model == "Scheduled_items" %}
+                      <p class="card-text"> 
+                        {{ NI.description }} X {{ NI.quantity}} | {{ NI.date_1}}{% if date_1 != date_2 %}-{{ NI.date_2 }}{% endif %} 
+    
+                        <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal_{{ NI.model }}_{{ NI.pk }}" id="needed_item_{{ NI.model }}_{{ NI.pk }}_PO">PO</button>
+    
+                      </p>
+                {% endif %}
+
+                <!-- TODO shopping list items TODO -->
+                {% if NI.model == "Shopping_list_items" %}
+                  <p class="card-text">
+                    {{ NI.description }} X {{ NI.quantity }}
+                  </p>
+                {% endif %}
+
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+
+          <!-- EN-ROUTE -->
+
+          <div role="tabpanel" class="tab-pane" id="en_route_panel">
+            {% for item in en_route_items %}
+            
+            <div class="card border-black text-center" id="en_route_item_{{ item.pk }}">
+              <div class="card-body">
+                <p class="card-text">
+                  {{ item.fullname }} | status - {{ item.status }}
+                  {% if item.delivery_date %} | delivery: {{item.delivery_date}}
+                  {% endif %}
+                </p>
+                <button>
+                  <a href="{% url 'mark_on_site' item.pk %}" id="delivered_button"> arrived on-site </a>
+                </button>
+              </div>
+            </div>
+
+            {% endfor %}
+          </div>
+
+        <!-- ON-SITE -->
+
+        <div role="tabpanel" class="tab-pane" id="on_site_panel">
+          {% for item in on_site_items %}
+
+          <div class="card border-black text-center" id="on_site_item_{{ item.pk }}">
+            <div class="card-body">
+              <p class="card-text">
+                {{ item.fullname }} | x {{ item.quantity }}
+              </p>
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+
+        <!-- BLANK PURCHASE ORDER FORM -->
+
+        <div role="tabpanel" class="tab-pane" id="PO_panel">
+          <div class="card border-black text-center">
+            <div class="card-body">
+              <form action="{% url 'purchase_order' job.job_id %}" id="blank_PO_form" method="POST">
+                {% csrf_token %}
+                {% for field in purchase_order_form %}
+                  {{ field.label }}<br>
+                  {{ field }}<br><br>
+                {% endfor %}
+                <input type="Submit" value="create" id="PO_panel_PO_form_submit_button">
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- tab content -->
+      </div>  <!-- site management card body -->
+    </div> <!-- site management whole card -->
+  </div>
+
+</div><!-- whole screen row -->
+</div><!-- whole screen container -->
+
+
+
+
+
+
+
+
+
+
+<!-- ######################################################################################### -->
+<!-- ######################################################################################### -->
+<!-- ######################################################################################### -->
+<!-- ######################################################################################### -->
+<!-- ###########################                  ############################################ -->
+<!-- ###########################       MODALS     ############################################ -->
+<!-- ###########################                  ############################################ -->
+<!-- ######################################################################################### -->
+<!-- ######################################################################################### -->
+<!-- ######################################################################################### -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- PURCHASE ORDER FORM MODAL -->
+
+    {% for NI in needed_items %}
+
+    <div class="modal fade" id="purchase_order_modal_{{ NI.model }}_{{ NI.pk }}" tabindex="-1" role="dialog" aria-labelledby="purchase_order_modal_Label" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="purchase_order_modal_Label">Purchase Order</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+
+            <form action="{% url 'purchase_order' job.job_id %}" method="POST" id="PO_form_{{ NI.model }}_{{ NI.pk }}">
+              {% csrf_token %}
+
+              {{ purchase_order_form.Supplier.label }}
+              {{ purchase_order_form.Supplier }} <br>
+              {{ purchase_order_form.Supplier_ref.label }}
+              {{ purchase_order_form.Supplier_ref }} <br>
+              {{ purchase_order_form.order_no.label }}
+              {{ purchase_order_form.order_no }} <br>
+              <br>
+              <div class="card">
+                <div class="card-block text-justify" id="item1">
+                  {{ purchase_order_form.item_1_description.label }}
+                  <input type="{{ purchase_order_form.item_1_description.type }}" name="{{ purchase_order_form.item_1_description.name }}" value="{{ NI.description }}"><br>
+                  {{ purchase_order_form.item_1_fullname.label }}
+                  {{ purchase_order_form.item_1_fullname }}<br>
+                  {{ purchase_order_form.item_1_price.label }}
+                  {{ purchase_order_form.item_1_price }}<br>
+                  {{ purchase_order_form.item_1_job.label }}
+                  <input type="{{ purchase_order_form.item_1_job.type }}" name="{{ purchase_order_form.item_1_job.name }}" value="{{ NI.job }}"><br>
+                  {{ purchase_order_form.item_1_delivery_location.label }}
+                  {{ purchase_order_form.item_1_delivery_location }}<br>
+                  {{ purchase_order_form.item_1_delivery_date.label }}
+                  {{ purchase_order_form.item_1_delivery_date }}<br>
+                  {{ purchase_order_form.item_1_quantity.label }}
+                  <input type="{{ purchase_order_form.item_1_quantity.type }}" name="{{ purchase_order_form.item_1_quantity.name }}" value="{{ NI.quantity }}"><br>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item2">
+                  {{ purchase_order_form.item_2_description.label }}
+                  {{ purchase_order_form.item_2_description }}<br>
+                  {{ purchase_order_form.item_2_fullname.label }}
+                  {{ purchase_order_form.item_2_fullname }}<br>
+                  {{ purchase_order_form.item_2_price.label }}
+                  {{ purchase_order_form.item_2_price }}<br>
+                  {{ purchase_order_form.item_2_job.label }}
+                  {{ purchase_order_form.item_2_job }}<br>
+                  {{ purchase_order_form.item_2_delivery_location.label }}
+                  {{ purchase_order_form.item_2_delivery_location }}<br>
+                  {{ purchase_order_form.item_2_delivery_date.label }}
+                  {{ purchase_order_form.item_2_delivery_date }}<br>
+                  {{ purchase_order_form.item_2_quantity.label }}
+                  {{ purchase_order_form.item_2_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item3">
+                  {{ purchase_order_form.item_3_description.label }}
+                  {{ purchase_order_form.item_3_description }}<br>
+                  {{ purchase_order_form.item_3_fullname.label }}
+                  {{ purchase_order_form.item_3_fullname }}<br>
+                  {{ purchase_order_form.item_3_price.label }}
+                  {{ purchase_order_form.item_3_price }}<br>
+                  {{ purchase_order_form.item_3_job.label }}
+                  {{ purchase_order_form.item_3_job }}<br>
+                  {{ purchase_order_form.item_3_delivery_location.label }}
+                  {{ purchase_order_form.item_3_delivery_location }}<br>
+                  {{ purchase_order_form.item_3_delivery_date.label }}
+                  {{ purchase_order_form.item_3_delivery_date }}<br>
+                  {{ purchase_order_form.item_3_quantity.label }}
+                  {{ purchase_order_form.item_3_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item4">
+                  {{ purchase_order_form.item_4_description.label }}
+                  {{ purchase_order_form.item_4_description }}<br>
+                  {{ purchase_order_form.item_4_fullname.label }}
+                  {{ purchase_order_form.item_4_fullname }}<br>
+                  {{ purchase_order_form.item_4_price.label }}
+                  {{ purchase_order_form.item_4_price }}<br>
+                  {{ purchase_order_form.item_4_job.label }}
+                  {{ purchase_order_form.item_4_job }}<br>
+                  {{ purchase_order_form.item_4_delivery_location.label }}
+                  {{ purchase_order_form.item_4_delivery_location }}<br>
+                  {{ purchase_order_form.item_4_delivery_date.label }}
+                  {{ purchase_order_form.item_4_delivery_date }}<br>
+                  {{ purchase_order_form.item_4_quantity.label }}
+                  {{ purchase_order_form.item_4_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item5">
+                  {{ purchase_order_form.item_5_description.label }}
+                  {{ purchase_order_form.item_5_description }}<br>
+                  {{ purchase_order_form.item_5_fullname.label }}
+                  {{ purchase_order_form.item_5_fullname }}<br>
+                  {{ purchase_order_form.item_5_price.label }}
+                  {{ purchase_order_form.item_5_price }}<br>
+                  {{ purchase_order_form.item_5_job.label }}
+                  {{ purchase_order_form.item_5_job }}<br>
+                  {{ purchase_order_form.item_5_delivery_location.label }}
+                  {{ purchase_order_form.item_5_delivery_location }}<br>
+                  {{ purchase_order_form.item_5_delivery_date.label }}
+                  {{ purchase_order_form.item_5_delivery_date }}<br>
+                  {{ purchase_order_form.item_5_quantity.label }}
+                  {{ purchase_order_form.item_5_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item6">
+                  {{ purchase_order_form.item_6_description.label }}
+                  {{ purchase_order_form.item_6_description }}<br>
+                  {{ purchase_order_form.item_6_fullname.label }}
+                  {{ purchase_order_form.item_6_fullname }}<br>
+                  {{ purchase_order_form.item_6_price.label }}
+                  {{ purchase_order_form.item_6_price }}<br>
+                  {{ purchase_order_form.item_6_job.label }}
+                  {{ purchase_order_form.item_6_job }}<br>
+                  {{ purchase_order_form.item_6_delivery_location.label }}
+                  {{ purchase_order_form.item_6_delivery_location }}<br>
+                  {{ purchase_order_form.item_6_delivery_date.label }}
+                  {{ purchase_order_form.item_6_delivery_date }}<br>
+                  {{ purchase_order_form.item_6_quantity.label }}
+                  {{ purchase_order_form.item_6_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item7">
+                  {{ purchase_order_form.item_7_description.label }}
+                  {{ purchase_order_form.item_7_description }}<br>
+                  {{ purchase_order_form.item_7_fullname.label }}
+                  {{ purchase_order_form.item_7_fullname }}<br>
+                  {{ purchase_order_form.item_7_price.label }}
+                  {{ purchase_order_form.item_7_price }}<br>
+                  {{ purchase_order_form.item_7_job.label }}
+                  {{ purchase_order_form.item_7_job }}<br>
+                  {{ purchase_order_form.item_7_delivery_location.label }}
+                  {{ purchase_order_form.item_7_delivery_location }}<br>
+                  {{ purchase_order_form.item_7_delivery_date.label }}
+                  {{ purchase_order_form.item_7_delivery_date }}<br>
+                  {{ purchase_order_form.item_7_quantity.label }}
+                  {{ purchase_order_form.item_7_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item8">
+                  {{ purchase_order_form.item_8_description.label }}
+                  {{ purchase_order_form.item_8_description }}<br>
+                  {{ purchase_order_form.item_8_fullname.label }}
+                  {{ purchase_order_form.item_8_fullname }}<br>
+                  {{ purchase_order_form.item_8_price.label }}
+                  {{ purchase_order_form.item_8_price }}<br>
+                  {{ purchase_order_form.item_8_job.label }}
+                  {{ purchase_order_form.item_8_job }}<br>
+                  {{ purchase_order_form.item_8_delivery_location.label }}
+                  {{ purchase_order_form.item_8_delivery_location }}<br>
+                  {{ purchase_order_form.item_8_delivery_date.label }}
+                  {{ purchase_order_form.item_8_delivery_date }}<br>
+                  {{ purchase_order_form.item_8_quantity.label }}
+                  {{ purchase_order_form.item_8_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item9">
+                  {{ purchase_order_form.item_9_description.label }}
+                  {{ purchase_order_form.item_9_description }}<br>
+                  {{ purchase_order_form.item_9_fullname.label }}
+                  {{ purchase_order_form.item_9_fullname }}<br>
+                  {{ purchase_order_form.item_9_price.label }}
+                  {{ purchase_order_form.item_9_price }}<br>
+                  {{ purchase_order_form.item_9_job.label }}
+                  {{ purchase_order_form.item_9_job }}<br>
+                  {{ purchase_order_form.item_9_delivery_location.label }}
+                  {{ purchase_order_form.item_9_delivery_location }}<br>
+                  {{ purchase_order_form.item_9_delivery_date.label }}
+                  {{ purchase_order_form.item_9_delivery_date }}<br>
+                  {{ purchase_order_form.item_9_quantity.label }}
+                  {{ purchase_order_form.item_9_quantity }}
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-block" id="item10">
+                  {{ purchase_order_form.item_10_description.label }}
+                  {{ purchase_order_form.item_10_description }}<br>
+                  {{ purchase_order_form.item_10_fullname.label }}
+                  {{ purchase_order_form.item_10_fullname }}<br>
+                  {{ purchase_order_form.item_10_price.label }}
+                  {{ purchase_order_form.item_10_price }}<br>
+                  {{ purchase_order_form.item_10_job.label }}
+                  {{ purchase_order_form.item_10_job }}<br>
+                  {{ purchase_order_form.item_10_delivery_location.label }}
+                  {{ purchase_order_form.item_10_delivery_location }}<br>
+                  {{ purchase_order_form.item_10_delivery_date.label }}
+                  {{ purchase_order_form.item_10_delivery_date }}<br>
+                  {{ purchase_order_form.item_10_quantity.label }}
+                  {{ purchase_order_form.item_10_quantity }}
+                </div>
+              </div>
+              <input type="Submit" value="Create" id="{{ NI.model }}_{{ NI.pk }}_create_PO">
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_modal_{{ SI.pk}}">Cancel</button>
+           </div>
+         </div>
+       </div>
+     </div>
+
+    {% endfor %}
+
+
+
+
+    <!-- modal update item date form -->
+      
+      {% for SI in scheduled_items %}
+
+      <div class="modal fade" id="date_form_modal_{{ SI.pk }}" tabindex="-1" role="dialog" aria-labelledby="date_form_modalLabel" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="date_form_modalLabel">Configure</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+
+                <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#date_{{ SI.pk }}" role="tab" data-toggle="tab">Date</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#delete_{{ SI.pk }}" role="tab" data-toggle="tab" id="delete_tab_{{SI.pk}}">Delete</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#shopping_list_form_{{ SI.pk }}" data-toggle="tab" id="shopping_list_form_{{ SI.pk }}_toggle">Add to Shopping List</a>
+                  </li>
+                </ul>
+
+                <div class="tab-content">
+
+                  <div role="tabpanel" class="tab-pane in active" id="date_{{ SI.pk }}">
+                    <form action="{% url 'schedule_item' 'update' SI.pk %}" method="post" id="something">
+                      {% csrf_token %}
+                      {{ update_date_form}}
+                      <input type="Submit" value="Update" id="schedule_item_update_button">
+                    </form>
+                  </div>
+
+                  <div role="tabpanel" class="tab-pane" id="delete_{{ SI.pk }}">
+                    <form action="{% url 'schedule_item' 'delete' SI.pk %}" method="post">
+                      {% csrf_token %}
+                      <input type="Submit" value="Delete '{{SI.description}}'" id="schedule_item_{{ SI.pk }}_delete">
+                    </form>
+                  </div>
+                
+                  <div role="tabpanel" class="tab-pane" id="shopping_list_form_{{ SI.pk }}">
+
+                    <form action="{% url 'shopping_list_create' 'create' %}" method="post" id="shopping_list_form_{{ SI.pk }}">
+                        
+                        {% csrf_token %}
+                        {{ new_shopping_list_item_form.description.label }}
+                        <input type="{{ new_shopping_list_item_form.description.type }}" name="{{ new_shopping_list_item_form.description.name }}" value="{{ SI.description }}" id="shopping_list_description_input"><br>
+
+                        {{ new_shopping_list_item_form.quantity.label }}
+                        <input type="{{ new_shopping_list_item_form.quantity.type }}" name="{{ new_shopping_list_item_form.quantity.name }}" value="{{ SI.quantity }}" id="shopping_list_quantity_input"><br>
+
+                        {{ new_shopping_list_item_form.job.label }}
+                        <input type="{{ new_shopping_list_item_form.job.type }}" name="{{ new_shopping_list_item_form.job.name }}" value="{{ SI.job }}" id="shopping_list_job_input"><br>
+                        <input type="Submit" value="add" id="shopping_list_form_submit_button">
+                    </form>
+
+                  </div>
+
+                </div>
+
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_modal_{{ SI.pk}}">Cancel</button>
+           </div>
+         </div>
+       </div>
+     </div> 
+
+
+
+
+
+     {% endfor %}
+
+{% endblock %}

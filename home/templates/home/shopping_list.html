@@ -1,0 +1,33 @@
+{% extends "home\base.html" %}
+{% block title %}TopMarks - Shopping List{% endblock %}
+
+{% block content %}
+
+
+  <!-- SHOPPING LIST -->
+
+  <div class="card border-primary text-center" id="shopping_list_panel">
+    <div class="card-body">
+
+    {% for item in shopping_list_items %}
+      <div class="card border-black text-center" id="{{ item.model }}_{{ item.pk}}">
+        <div class="card-body">
+          <p class="card-text"> {{ item.description }} x{{ item.quantity }} || {{ item.job.address }} ||
+            <a href="{% url 'acquired' item.pk %}" id="{{ item.model }}_{{ item.pk }}_acquired_button"> ACQUIRED </a>
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+
+    </div> <!-- shopping_list_panel card body -->
+    <div class="card-footer">
+      <form action="{% url 'shopping_list_create' 'create' %}" method="post" id="new_shopping_list_item_form">
+        {% csrf_token %}
+        {{ new_shopping_list_item_form }}
+      <input type="Submit" value="add" id="shopping_list_form_submit_button">
+      </form>
+    </div> <!-- card footer -->
+  </div>
+
+
+{% endblock %}
