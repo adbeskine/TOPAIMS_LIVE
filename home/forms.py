@@ -1,5 +1,5 @@
 from django import forms
-from .models import Jobs, Purchase_orders
+from home.models import Jobs, Purchase_orders
 
 
 
@@ -28,7 +28,7 @@ class update_scheduled_item_date_form(forms.Form):
 class purchase_order_form(forms.Form):
 	Supplier = forms.CharField(widget= forms.TextInput(attrs={'id':'supplier_input'}))
 	Supplier_ref = forms.CharField(widget= forms.TextInput(attrs={'id':'supplier_ref_input'}))
-	order_no = forms.IntegerField(initial=Purchase_orders.objects.count()+1, disabled=True)
+	order_no = forms.IntegerField(initial=Purchase_orders.objects.count()+4001, disabled=True)
 
 	item_1_description = forms.CharField(required=False, widget = forms.TextInput(attrs={'id':'item_1_description_input'}))
 	item_1_fullname = forms.CharField(required=False, widget = forms.TextInput(attrs={'id':'item_1_fullname_input'}))
