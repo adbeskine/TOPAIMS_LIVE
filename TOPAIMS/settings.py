@@ -124,3 +124,7 @@ STATIC_URL = '/static/'
 DATE_FORMAT = "Y/j/m"
 
 NOW = date.today()
+
+import dj_database_url
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
