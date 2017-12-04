@@ -1,0 +1,1 @@
+web: gunicorn TOPAIMS.wsgi --log-file -
