@@ -361,6 +361,13 @@ def update_job(request, job_id, status): # LOGGEDIN ADMIN
 		else:
 			return HttpResponse('How about no?')
 
+
+
+
+#-- ITEM FLOW --#
+
+#-- create items --#
+
 def new_schedule_item(request, job_id):
 	
 	if request.method == 'POST':
@@ -398,34 +405,6 @@ def new_schedule_item(request, job_id):
 
 	else:
 		return HttpResponse('how about no?')
-
-
-
-def schedule_item(request, function, pk):
-	scheduled_item = Scheduled_items.objects.get(pk=pk)
-	job = scheduled_item.job
-
-	if request.method == 'POST':
-		
-		if function == 'update':
-			form = update_scheduled_item_date_form(request.POST)
-
-			if form.is_valid():
-				scheduled_item.date_1=form.cleaned_data['update_date_1']
-				scheduled_item.save()
-	
-				if form.cleaned_data['update_date_2']:
-					scheduled_item.date_2=form.cleaned_data['update_date_2']
-					scheduled_item.save()
-
-		elif function == 'delete':
-			scheduled_item.delete()
-
-		else:
-			return HttpResponse('how about no?')
-
-		return redirect(reverse('job', kwargs={'job_id':job.job_id}))
-
 
 def purchase_order(request, job_id=None): #SNAGGING, CONDITIONAL VALIDATION
 
@@ -482,6 +461,9 @@ def purchase_order(request, job_id=None): #SNAGGING, CONDITIONAL VALIDATION
 	else:
 		return HttpResponse('how about no?')
 
+# shopping list item create is above in 'shopping_list'
+
+# -- update items --#
 
 def acquired(request, pk):
 	if request.session['logged_in'] == True:
@@ -504,6 +486,14 @@ def acquired(request, pk):
 	else:
 		return HttpResponse('how about no?')
 
+def mark_showroom(request, pk):
+
+	item = Items.objects.filter(pk=pk).first()
+	item.status='IN SHOWROOM'
+	item.save()
+
+	return redirect(reverse('homepage'))
+
 def mark_on_site(request, pk):
 	if request.session['logged_in'] == True:
 		Item = Items.objects.filter(pk=pk).first()
@@ -516,15 +506,6 @@ def mark_on_site(request, pk):
 
 	else:
 		return HttpResponse('how about no?')
-
-
-def mark_showroom(request, pk):
-
-	item = Items.objects.filter(pk=pk).first()
-	item.status='IN SHOWROOM'
-	item.save()
-
-	return redirect(reverse('homepage'))
 
 def reject_delivery(request, pk): # VALIDATION
 	if request.method == 'POST':
@@ -572,6 +553,33 @@ def reject_delivery(request, pk): # VALIDATION
 
 		else:
 			print(form.errors)
+
+def schedule_item(request, function, pk):
+	scheduled_item = Scheduled_items.objects.get(pk=pk)
+	job = scheduled_item.job
+
+	if request.method == 'POST':
+		
+		if function == 'update':
+			form = update_scheduled_item_date_form(request.POST)
+
+			if form.is_valid():
+				scheduled_item.date_1=form.cleaned_data['update_date_1']
+				scheduled_item.save()
+	
+				if form.cleaned_data['update_date_2']:
+					scheduled_item.date_2=form.cleaned_data['update_date_2']
+					scheduled_item.save()
+
+		elif function == 'delete':
+			scheduled_item.delete()
+
+		else:
+			return HttpResponse('how about no?')
+
+		return redirect(reverse('job', kwargs={'job_id':job.job_id}))
+
+# -- delete items --#
 
 
 
