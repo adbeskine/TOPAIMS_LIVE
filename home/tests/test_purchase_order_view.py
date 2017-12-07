@@ -45,13 +45,13 @@ class PurchaseOrderViewTest(Test):
 
 	def test_purchase_orders_view(self):
 		# this is where the user can browser all the different po numbers
-		response = self.client.get(reverse('purchase_orders'))
+		response = self.client.get(reverse('purchase_orders_browser'))
 
 		self.assertTemplateUsed(response, 'home/purchase_orders.html')
 
 	def test_specific_purchase_order_view(self):
 		item = Items.objects.filter(description='testitem1 desc').first()
 		
-		response = self.client.get(reverse('purchase_order', kwargs={'order_no':item.PO.order_no}))
+		response = self.client.get(reverse('purchase_orders', kwargs={'order_no':item.PO.order_no}))
 
 		self.assertTemplateUsed(response, 'home/purchase_order.html')

@@ -299,6 +299,14 @@ def shopping_list(request, function=None): #acquired will post to pk link
 
 	return check_and_render(request, 'home/shopping_list.html', context)
 
+def purchase_orders(request, order_no=None):
+
+	if order_no:
+		return check_and_render(request, 'home/purchase_order.html')
+
+
+	return check_and_render(request, 'home/purchase_orders.html')
+
 #############################################################
 #############################################################
 ##                   CRUD                                  ##
