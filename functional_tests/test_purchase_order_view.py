@@ -114,18 +114,18 @@ class PurchaseOrderViewTest(FunctionalTest):
 			self.browser.get(self.live_server_url+reverse('purchase_orders_browser'))
 			self.wait_until_visible('purchase_order_number_input')
 			
-			# He clicks purchase order 4001 and clicks submit. He is redirected to the purchase order view.
+			# He clicks purchase order 4001 and clicks 'Go'. He is redirected to the purchase order view.
 			purchase_order_choice = Select(self.browser.find_element_by_id('purchase_order_number_input'))
 			purchase_order_choice.select_by_value(str(today_1_order_no))
 			self.click('purchase_order_number_submit_button')
 			self.wait_until_visible('purchase_order_view_title')
 	
-			# Here he sees a section the purchase order information: supplier, supplier ref, order number
+			# Here he sees a section of the purchase order information: supplier, supplier ref, order number
 			self.assertIn('supplier: Stark Industries', self.browser.page_source)
 			self.assertIn('supplier ref: 1', self.browser.page_source)
 			self.assertIn('Purchase Order No: '+str(4000+today_1_order_no), self.browser.page_source)
 	
-			# He also sees a row containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
+			# He also sees a table with a row containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
 			item_row = self.browser.find_element_by_id(f'PO_item_{today_1_item.pk}')
 			self.assertIn(f'{today_1_item.description}', item_row.get_attribute("innerHTML"))
 			self.assertIn(f'{today_1_item.fullname}', item_row.get_attribute("innerHTML"))

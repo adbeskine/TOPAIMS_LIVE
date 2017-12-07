@@ -225,12 +225,16 @@
 #-------------------------------------#
 
 # Marek navigates to the purchase order view and sees a dropdown menu to browse the purchase orders.
-# He clicks a purchase order number and clicks submit. He is redirected to the purchase order view.
+# He clicks purchase order 4001 and clicks 'Go'. He is redirected to the purchase order view.
+# Here he sees a section of the purchase order information: supplier, supplier ref, order number
+# He also sees a table with a row containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
 
-# Here he sees a card containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
+# Marek clicks an item name on the en-route panel of a job and is redirected to its purchase order view with all information correctly displayed as above
+# Marek clicks an item name on the on-site panel of a job and is redirected to its purchase order view with all infomration correctly displayed as above
 
-# Marek clicks an item name in the en-route panel of a job and it redirects to its purchase order view
-# Marek clicks an item name in the on-site panel of a job and it redirects to its purchase order view
+# Marek clicks an item on the 'today's deliveries' section of the home page and is redirected to its purchase order view with all information correctly displayed as above
+# Marek clicks an item on the 'this week's deliveries' section of the home page and is redirected to its purchase order view with all information correctly displayed as above
+# Marek clicks an item on the 'all deliveries' section of the home page and is redirected to its purchase order view with all information correctly displayed as above
 
 
 #-------------------------------------#
