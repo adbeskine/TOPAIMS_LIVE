@@ -221,8 +221,17 @@
 #-------------------------------------#
 
 #-------------------------------------#
-#         DETAILED ITEM VIEW          #
+#         PURCHASE ORDER VIEW         #
 #-------------------------------------#
+
+# Marek navigates to the purchase order view and sees a dropdown menu to browse the purchase orders.
+# He clicks a purchase order number and clicks submit. He is redirected to the purchase order view.
+
+# Here he sees a card containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
+
+# Marek clicks an item name in the en-route panel of a job and it redirects to its purchase order view
+# Marek clicks an item name in the on-site panel of a job and it redirects to its purchase order view
+
 
 #-------------------------------------#
 #     DEDICATED SHOPPING LIST PAGE    #

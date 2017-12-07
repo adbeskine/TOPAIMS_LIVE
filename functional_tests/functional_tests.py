@@ -16,3 +16,6 @@ os.system("python manage.py test functional_tests.test_shopping_list")
 
 os.system("echo HOME PAGE TEST")
 os.system("python manage.py test functional_tests.test_home_page")
+
+os.system("echo PURCHASE ORDER VIEWS TEST")
+os.system("python manage.py test functional_tests.test_purchase_order_view")

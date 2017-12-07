@@ -581,8 +581,4 @@ def schedule_item(request, function, pk):
 
 # -- delete items --#
 
-
-
-
-
-
+# schedule item delete in main schedule item method
