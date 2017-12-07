@@ -6,7 +6,7 @@ from django.contrib import messages
 from sensitive import WEBSITE_PASSWORD as password
 from .models import Site_info, Jobs, Notes, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import os, random, string, re
-from home.forms import new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, new_shopping_list_item_form, reject_delivery_form
+from home.forms import new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form
 import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -302,10 +302,34 @@ def shopping_list(request, function=None): #acquired will post to pk link
 def purchase_orders(request, order_no=None):
 
 	if order_no:
-		return check_and_render(request, 'home/purchase_order.html')
 
+		purchase_order = Purchase_orders.objects.filter(order_no=order_no).first()
+		purchase_order_no = purchase_order.order_no+4000
 
-	return check_and_render(request, 'home/purchase_orders.html')
+		item_list = []
+		for item in Items.objects.filter(PO=purchase_order):
+			item_list.append(item)
+
+		context = {
+			'purchase_order':purchase_order,
+			'item_list':item_list,
+			'purchase_order_no':purchase_order_no
+		}
+		return check_and_render(request, 'home/purchase_order.html', context)
+
+	
+	if request.method == 'POST':
+		form = purchase_order_choice_form(request.POST)
+		if form.is_valid():
+			purchase_order = form.cleaned_data['purchase_order_number']
+
+			return redirect(reverse('purchase_orders', kwargs={'order_no':purchase_order.order_no}))
+
+	context = {
+		'purchase_order_choice_form':purchase_order_choice_form
+	}
+
+	return check_and_render(request, 'home/purchase_orders.html', context)
 
 #############################################################
 #############################################################

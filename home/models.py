@@ -41,6 +41,9 @@ class Purchase_orders(models.Model):
 	supplier_ref = models.CharField(max_length=100, default='')
 	order_no = models.AutoField(primary_key=True)
 
+	def __str__(self):
+		return f'{self.order_no + 4000}'
+
 
 class Items(models.Model):
 	description = models.CharField(max_length=100, default='')

@@ -44,8 +44,11 @@
       					<div class="card border-primary text-center">
       						<div class="card-body">
       							<p class="card-text">
+                      {% if item.PO %}
+                        <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                      {% endif %}
 
-      								{{ item.fullname }} x {{ item.quantity }}
+      								{{ item.fullname }}</a> x {{ item.quantity }}
 
       								<button> 
       									<a href="{% url 'mark_showroom' item.pk %}" id="accept_delivery_button_{{ item.pk }}">
@@ -74,7 +77,11 @@
       						<div class="card-body">
       							<p class="card-text">
 
-      								{{ item.fullname }} x {{ item.quantity }}
+                      {% if item.PO %}
+                        <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                      {% endif %}
+
+      								{{ item.fullname }}</a> x {{ item.quantity }}
 
       								<button> 
       									<a href="{% url 'mark_showroom' item.pk %}" id="accept_delivery_button_{{ item.pk }}">
@@ -103,7 +110,11 @@
       						<div class="card-body">
       							<p class="card-text">
 
-      								{{ item.fullname }} x {{ item.quantity }}
+                      {% if item.PO %}
+                       <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                      {% endif %}
+
+      								{{ item.fullname }}</a> x {{ item.quantity }}
       								<button> 
       									<a href="{% url 'mark_showroom' item.pk %}" id="accept_delivery_button_{{ item.pk }}">
       										Accept

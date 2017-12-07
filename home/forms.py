@@ -119,3 +119,6 @@ class new_shopping_list_item_form(forms.Form):
 class reject_delivery_form(forms.Form):
 	note = forms.CharField()
 	reschedule_date = forms.DateField(required=False, widget=forms.SelectDateWidget)
+
+class purchase_order_choice_form(forms.Form):
+	purchase_order_number = forms.ModelChoiceField(queryset=Purchase_orders.objects.all(), to_field_name="order_no", widget=forms.Select(attrs={'id':'purchase_order_number_input'}))

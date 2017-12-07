@@ -1,1 +1,64 @@
-asdf
+{% extends 'home/base.html' %}
+
+{% block title %}TopMarks - {{ purchase_order_no }} {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+
+		<!-- PURCHASE ORDER -->
+
+		<div class="card border-primary text-center">
+
+			<div class="card-header">
+        <h4 id="purchase_order_view_title"> Purchase Order No: {{ purchase_order_no }} </h4> <br>
+        <h5>supplier: {{ purchase_order.supplier }} | supplier ref: {{ purchase_order.supplier_ref}}</h5>
+      </div>
+
+      <div class="card-body">
+
+      	<table class="table table-responsive">
+      		<tr>
+      			<th>Description</th>
+      			<th>Fullname</th>
+      			<th>Delivery Location</th>
+      			<th>Price</th>
+      			<th>Status</th>
+      			<th>Order Date</th>
+      			<th>Delivery Date</th>
+      			<th>Quantity</th>
+      			<th>Job</th>
+      		</tr>
+      	  {% for item in item_list %}
+      	  <tr id="PO_item_{{ item.pk }}">
+      	  	<td>{{ item.description }}</td>
+      	  	<td>{{ item.fullname }}</td>
+						<td>{{ item.delivery_location }}</td>
+						<td>{{ item.price }}</td>
+						<td>{{ item.status }}</td>
+						<td>{{ item.order_date}}</td>
+						<td>{{ item.delivery_date }}</td>
+						<td>{{ item.quantity }}</td>
+						<td>{{ item.job.address }}</td>
+					</tr>
+      	  {% endfor %}
+      	</table>
+   	  </div>
+   	</div>
+   	</div>
+  </div>
+</div>
+
+    {% endblock %}
+
+{{ item.description }}
+{{ item.fullname }}
+{{ item.delivery_location }}
+{{ item.price }}
+{{ item.status }}
+{{ item.order_date}}
+{{ item.delivery_date }}
+{{ item.quantity }}
+{{ item.job }}

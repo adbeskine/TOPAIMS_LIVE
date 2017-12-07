@@ -111,31 +111,31 @@ class PurchaseOrderViewTest(FunctionalTest):
 			# for today4
 	
 			# Marek navigates to the purchase order view and sees a dropdown menu to browse the purchase orders.
-			self.browser.get(self.live_server_url+reverse('purchase_orders'))
+			self.browser.get(self.live_server_url+reverse('purchase_orders_browser'))
 			self.wait_until_visible('purchase_order_number_input')
 			
 			# He clicks purchase order 4001 and clicks submit. He is redirected to the purchase order view.
 			purchase_order_choice = Select(self.browser.find_element_by_id('purchase_order_number_input'))
-			purchase_order_choice.select_by_value(str(4000+today_1_order_no))
+			purchase_order_choice.select_by_value(str(today_1_order_no))
 			self.click('purchase_order_number_submit_button')
 			self.wait_until_visible('purchase_order_view_title')
 	
 			# Here he sees a section the purchase order information: supplier, supplier ref, order number
 			self.assertIn('supplier: Stark Industries', self.browser.page_source)
-			self.assertIn('suplier ref: 1', self.browser.page_source)
-			self.assertIn('Purchase Order No. '+str(4000+today_1_order_no), self.browser.page_source) # edit this to match the final design
+			self.assertIn('supplier ref: 1', self.browser.page_source)
+			self.assertIn('Purchase Order No: '+str(4000+today_1_order_no), self.browser.page_source)
 	
-			# He also sees a card containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
-			item_card = self.browser.find_element_by_id(f'PO_item_{today_1_item.pk}')
-			self.assertIn(f'{today_1_item.description}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.fullname}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.delivery_location}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.quantity}', item_card.get_attribute("innerHTML")) #edit to match final design as necessary
-			self.assertIn(f'{today_1_item.status}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.order_date}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.delivery_date}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.quantity}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_1_item.job.address}', item_card.get_attribute("innerHTML"))
+			# He also sees a row containing: description, fullname, delivery_location, price, status, order_date, delivery_date, quantity and job for each item
+			item_row = self.browser.find_element_by_id(f'PO_item_{today_1_item.pk}')
+			self.assertIn(f'{today_1_item.description}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.fullname}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.delivery_location}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.quantity}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.status}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.order_date}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.delivery_date}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.quantity}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_1_item.job.address}', item_row.get_attribute("innerHTML"))
 	
 			# Marek navigates to the en-route panel of the job and sees all three items in the en-route panel
 			self.browser.get(self.live_server_url+reverse('job', kwargs={'job_id':'200ParkAvenue'}))
@@ -148,26 +148,26 @@ class PurchaseOrderViewTest(FunctionalTest):
 			# Marek finds he is redirected to the purchase order view of 'today 2' and (as above) all correct information is present
 			self.wait_until_visible('purchase_order_view_title')
 			self.assertIn('supplier: Stark Industries', self.browser.page_source)
-			self.assertIn('suplier ref: 2', self.browser.page_source)
-			self.assertIn('Purchase Order No. '+str(4000+today_2_order_no), self.browser.page_source) # edit to match final design
+			self.assertIn('supplier ref: 2', self.browser.page_source)
+			self.assertIn('Purchase Order No: '+str(4000+today_2_order_no), self.browser.page_source)
 	
-			item_card = self.browser.find_element_by_id(f'PO_item_{today_2_item.pk}')
-			self.assertIn(f'{today_2_item.description}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.fullname}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.delivery_location}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.quantity}', item_card.get_attribute("innerHTML")) #edit to match final design as necessary
-			self.assertIn(f'{today_2_item.status}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.order_date}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.delivery_date}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.quantity}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_2_item.job.address}', item_card.get_attribute("innerHTML"))
+			item_row = self.browser.find_element_by_id(f'PO_item_{today_2_item.pk}')
+			self.assertIn(f'{today_2_item.description}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.fullname}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.delivery_location}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.quantity}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.status}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.order_date}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.delivery_date}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.quantity}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_2_item.job.address}', item_row.get_attribute("innerHTML"))
 	
 			# Marek navigates back to the job view and marks 'today 3' as 'on site'
 			self.browser.get(self.live_server_url+reverse('job', kwargs={'job_id':'200ParkAvenue'}))
 			self.wait_until_visible('notes_panel')
 			self.click('en_route_panel_toggle')
 			self.wait_until_visible('en_route_panel')
-			self.click(base_element=f'en_route_item_{today_2_item.pk}', element='delivered_button')
+			self.click(base_element=f'en_route_item_{today_3_item.pk}', element='delivered_button')
 	
 			# Marek clicks the item name in the on-site panel of a job and it redirects to its purchase order view
 			self.wait_until_visible('notes_panel')
@@ -179,19 +179,21 @@ class PurchaseOrderViewTest(FunctionalTest):
 			# Marek finds he is redirected to the purchase order view of 'today 3' and (as above) all correct information is present
 			self.wait_until_visible('purchase_order_view_title')
 			self.assertIn('supplier: Stark Industries', self.browser.page_source)
-			self.assertIn('suplier ref: 3', self.browser.page_source)
-			self.assertIn('Purchase Order No. '+str(4000+today_3_order_no), self.browser.page_source) # edit to match final design
-	
-			item_card = self.browser.find_element_by_id(f'PO_item_{today_3_item.pk}')
-			self.assertIn(f'{today_3_item.description}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.fullname}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.delivery_location}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.quantity}', item_card.get_attribute("innerHTML")) #edit to match final design as necessary
-			self.assertIn(f'{today_3_item.status}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.order_date}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.delivery_date}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.quantity}', item_card.get_attribute("innerHTML"))
-			self.assertIn(f'{today_3_item.job.address}', item_card.get_attribute("innerHTML"))
+			self.assertIn('supplier ref: 3', self.browser.page_source)
+			self.assertIn('Purchase Order No: '+str(4000+today_3_order_no), self.browser.page_source)
+
+			today_3_item = Items.objects.filter(description='today 3').first()
+
+			item_row = self.browser.find_element_by_id(f'PO_item_{today_3_item.pk}')
+			self.assertIn(f'{today_3_item.description}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.fullname}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.delivery_location}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.quantity}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.status}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.order_date}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.delivery_date}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.quantity}', item_row.get_attribute("innerHTML"))
+			self.assertIn(f'{today_3_item.job.address}', item_row.get_attribute("innerHTML"))
 	
 			# Marek clicks the item link in the 'today deliveries' panel of the home page and finds he is redirected to the correct po view
 			self.browser.get(self.live_server_url+reverse('homepage'))
@@ -202,7 +204,7 @@ class PurchaseOrderViewTest(FunctionalTest):
 	
 			self.click(f'po_link_item_{today_1_item.pk}')
 	
-			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_order_view', kwargs={'order_no':today_1_item.PO.order_no})))
+			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_1_item.PO.order_no}), self.browser.current_url))
 	
 			# Marek goes back to the home page and clicks an item in the 'this week' panel
 			self.browser.get(self.live_server_url+reverse('homepage'))
@@ -213,7 +215,7 @@ class PurchaseOrderViewTest(FunctionalTest):
 	
 			self.click(f'po_link_item_{today_2_item.pk}')
 	
-			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_order_view', kwargs={'order_no':today_2_item.PO.order_no})))
+			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_2_item.PO.order_no}), self.browser.current_url))
 
 			# Marek goes back to the home page and clicks an item on the 'all deliveries' panel
 			self.browser.get(self.live_server_url+reverse('homepage'))
@@ -224,6 +226,6 @@ class PurchaseOrderViewTest(FunctionalTest):
 	
 			self.click(f'po_link_item_{today_4_item.pk}')
 	
-			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_order_view', kwargs={'order_no':today_4_item.PO.order_no})))			
+			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_4_item.PO.order_no}), self.browser.current_url))			
 
 

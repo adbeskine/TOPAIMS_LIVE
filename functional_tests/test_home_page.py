@@ -187,7 +187,7 @@ class HomePageTest(FunctionalTest):
 			self.click(base_element='site_management_panel', element='en_route_panel_toggle')
 			en_route_panel = self.browser.find_element_by_id('site_management_panel').find_element_by_id('en_route_panel')
 	
-			self.wait_for(lambda: self.assertIn('today fname 1 | status - IN SHOWROOM', en_route_panel.get_attribute('innerHTML')))
+			self.wait_for(lambda: self.assertIn('today fname 1 </a>| status - IN SHOWROOM', en_route_panel.get_attribute('innerHTML'))) # the closing anchor tag is always there because of the potential PO hyperlink
 	
 			
 	
@@ -223,7 +223,7 @@ class HomePageTest(FunctionalTest):
 			en_route_panel = self.browser.find_element_by_id('site_management_panel').find_element_by_id('en_route_panel')
 
 			en_route_panel_stripped = ''.join(letter for letter in en_route_panel.get_attribute("innerHTML") if letter.isalnum())
-			string = f'today fname 2 | status - ORDERED | delivery: {today_2_object.delivery_date}'
+			string = f'today fname 2 </a>| status - ORDERED | delivery: {today_2_object.delivery_date}' # the closing anchor tag is always there because of the potential PO hyperlink
 			stripped_string = ''.join(letter for letter in string if letter.isalnum())
 	
 			self.wait_for(lambda: self.assertIn(stripped_string, en_route_panel_stripped)) # may render in the FT differently to the browser, edit as needed
