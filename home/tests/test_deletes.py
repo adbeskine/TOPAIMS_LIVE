@@ -362,7 +362,7 @@ class DeletesTest(Test):
 		self.client.get(reverse('delete', kwargs={'model':shopping_list_item_to_delete.model, 'pk':shopping_list_item_to_delete.pk}), follow=True)
 
 		after_delete_count = Shopping_list_items.objects.count()
-		self.assertEquals(after_delete_count == before_delete_count-1) # only the one item was deleted
+		self.assertEquals(after_delete_count, before_delete_count-1) # only the one item was deleted
 		self.assertFalse(Shopping_list_items.objects.filter(pk=shopping_list_item_to_delete.pk).exists())
 
 
@@ -373,7 +373,7 @@ class DeletesTest(Test):
 		self.client.get(reverse('delete', kwargs={'model':acquired_shopping_list_item_to_delete.model, 'pk':acquired_shopping_list_item_to_delete.pk}), follow=True)
 
 		after_delete_count = Items.objects.count()
-		self.assertEquals(after_delete_count == before_delete_count-1)
+		self.assertEquals(after_delete_count, before_delete_count-1)
 		self.assertFalse(Items.objects.filter(pk=acquired_shopping_list_item_to_delete.pk).exists())
 
 
@@ -384,7 +384,7 @@ class DeletesTest(Test):
 		self.client.get(reverse('delete', kwargs={'model':purchase_order_item_to_delete.model, 'pk':purchase_order_item_to_delete.pk}), follow=True) # REFRACT - one method for this line amongst all objects to delete?
 
 		after_delete_count = Items.objects.count()
-		self.assertEquals(after_delete_count == before_delete_count-1)
+		self.assertEquals(after_delete_count, before_delete_count-1)
 		self.assertFalse(Items.objects.filter(pk=purchase_order_item_to_delete.pk).exists())
 
 
@@ -395,8 +395,8 @@ class DeletesTest(Test):
 		self.client.get(reverse('delete', kwargs={'model':job_note_to_delete.model, 'pk':job_note_to_delete.pk}), follow=True)
 
 		after_delete_count = Notes.objects.count()
-		self.assertEquals(after_delete_count == before_delete_count-1)
-		self.assertFalse(Items.objects.filter(pk=job_note_to_delete.pk).exists())
+		self.assertEquals(after_delete_count, before_delete_count-1)
+		self.assertFalse(Notes.objects.filter(pk=job_note_to_delete.pk).exists())
 
 
 		# DELETE ADMIN NOTE
@@ -406,8 +406,8 @@ class DeletesTest(Test):
 		self.client.get(reverse('delete', kwargs={'model':admin_note_to_delete.model, 'pk':admin_note_to_delete.pk}), follow=True)
 
 		after_delete_count = Notes.objects.count()
-		self.assertEquals(after_delete_count == before_delete_count-1)
-		self.assertFalse(Items.objects.filter(pk=admin_note_to_delete.pk).exists())
+		self.assertEquals(after_delete_count, before_delete_count-1)
+		self.assertFalse(Notes.objects.filter(pk=admin_note_to_delete.pk).exists())
 
 
 		
@@ -416,6 +416,7 @@ class DeletesTest(Test):
 		before_delete_jobs_count = Jobs.objects.count()
 		before_delete_shopping_list_items_count = Shopping_list_items.objects.count()
 		before_delete_Items_items_count = Items.objects.count() # REMEMBER - this includes purchase order items and acquired shopping list items
+
 		before_delete_notes_count = Notes.objects.count()
 		before_delete_schedule_items_count = Scheduled_items.objects.count()
 
@@ -449,6 +450,7 @@ class DeletesTest(Test):
 			Notes.objects.filter(Title='job 2 note 2 title'),
 			Notes.objects.filter(Title='job 2 note 3 title')
 			]
+
 		Schedule_items_items_to_delete=[
 			Scheduled_items.objects.filter(description='job 2 schedule item 1'),
 			Scheduled_items.objects.filter(description='job 2 schedule item 2'),
@@ -463,7 +465,6 @@ class DeletesTest(Test):
 
 		
 		self.client.post(reverse('delete_job'), data=job_delete_form_data, follow=True) # different url NAME for delete view function with no url arguments
-
 		
 		after_delete_jobs_count = Jobs.objects.count()
 		after_delete_shopping_list_items_count = Shopping_list_items.objects.count()
@@ -471,11 +472,11 @@ class DeletesTest(Test):
 		after_delete_notes_count = Notes.objects.count()
 		after_delete_schedule_items_count = Scheduled_items.objects.count()
 
-		self.assertEquals(after_delete_jobs_count == before_delete_jobs_count-1)
-		self.assertEquals(after_delete_shopping_list_items_count == before_delete_shopping_list_items_count-3)
-		self.assertEquals(after_delete_Items_items_count == before_delete_Items_items_count-3) # 3 acquired items deleted, 6 po items preserved for purchase order
-		self.assertEquals(after_delete_schedule_items_count == before_delete_schedule_items_count-3)
-		self.assertEquals(after_delete_notes_count == before_delete_notes_count-3)
+		self.assertEquals(after_delete_jobs_count, before_delete_jobs_count-1)
+		self.assertEquals(after_delete_shopping_list_items_count, before_delete_shopping_list_items_count-3)
+		self.assertEquals(after_delete_Items_items_count, before_delete_Items_items_count-3) # 3 acquired items deleted, 6 po items preserved for purchase order
+		self.assertEquals(after_delete_schedule_items_count, before_delete_schedule_items_count-3)
+		self.assertEquals(after_delete_notes_count, before_delete_notes_count-4) #4th note is note generated upon creation of job
 
 		self.assertFalse(job_to_delete.exists())
 		for item in shopping_list_items_to_delete: # REFRACT - put all these for loops in to one 'for item in shopping_list... , items_items.... ,'?

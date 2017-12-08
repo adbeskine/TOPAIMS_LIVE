@@ -6,7 +6,7 @@ from django.contrib import messages
 from sensitive import WEBSITE_PASSWORD as password
 from .models import Site_info, Jobs, Notes, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import os, random, string, re
-from home.forms import new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form
+from home.forms import delete_job_form, new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form
 import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -619,3 +619,73 @@ def schedule_item(request, function, pk):
 # -- delete items --#
 
 # schedule item delete in main schedule item method
+
+
+def delete(request, model=None, pk=None):
+
+	if request.session['logged_in'] == True:
+
+		if model and pk:
+
+			if model == 'Shopping_list_items':
+				item = Shopping_list_items.objects.filter(pk=pk).first()
+				item.delete()
+	
+			elif model == 'Acquired_Item':
+				item = Items.objects.filter(pk=pk).first()
+				item.delete()
+	
+			elif model == 'Items':
+				item = Items.objects.filter(pk=pk).first()
+				item.delete()
+	
+			elif model == 'Notes':
+				item = Notes.objects.filter(pk=pk).first()
+				item.delete()
+
+		elif model==None and pk==None:
+
+			if request.method == 'POST':
+
+				form = delete_job_form(request.POST)
+
+				if form.is_valid():
+					delete_job_address = form.cleaned_data['job_deletion_selection']
+					security_field_1 = form.cleaned_data['security_field_1']
+					security_field_2 = form.cleaned_data['security_field_2']
+
+					if str(delete_job_address) == str(security_field_1) == str(security_field_2):
+						job = Jobs.objects.filter(address=delete_job_address).first()
+
+						Shopping_list_items_to_delete = Shopping_list_items.objects.filter(job=job)
+						Acquired_items_to_delete = Items.objects.filter(job=job).filter(status='ACQUIRED')
+						Notes_to_delete = Notes.objects.filter(job=job)
+						Schedule_items_to_delete = Scheduled_items.objects.filter(job=job)
+	
+						for item in Shopping_list_items_to_delete:
+							item.delete()
+						for item in Acquired_items_to_delete:
+							item.delete()
+						for item in Notes_to_delete:
+							item.delete()
+						for item in Schedule_items_to_delete:
+							item.delete()
+
+						Purchase_order_items_left = Items.objects.filter(job=job)
+						for item in Purchase_order_items_left:
+							item.job=None
+							item.save()
+
+						job.delete()
+
+					else:
+						print(delete_job_address)
+						print(security_field_1)
+						print(security_field_2) # check_and_render(template with delete job form) with alert saying 'security didn't match' or something
+				else:
+					print(form.errors)
+
+		# return check_and_render(template with delete job form)
+
+	return redirect(reverse('homepage')) # this is the redirect for all the non-job object deletions
+

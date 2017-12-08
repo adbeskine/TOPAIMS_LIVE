@@ -55,7 +55,7 @@ class Items(models.Model):
 	delivery_date = models.CharField(max_length=100, default='') #
 	quantity = models.IntegerField(default=1)
 	PO = models.ForeignKey(Purchase_orders, blank=True, null=True)
-	job = models.ForeignKey(Jobs)
+	job = models.ForeignKey(Jobs, blank=True, null=True)
 	model = models.CharField(default='Items', max_length=100)
 
 class Shopping_list_items(models.Model):
