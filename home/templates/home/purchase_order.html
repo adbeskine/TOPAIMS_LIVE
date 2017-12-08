@@ -30,6 +30,7 @@
       			<th>Delivery Date</th>
       			<th>Quantity</th>
       			<th>Job</th>
+            <th></th>
       		</tr>
       	  {% for item in item_list %}
       	  <tr id="PO_item_{{ item.pk }}">
@@ -42,6 +43,7 @@
 						<td>{{ item.delivery_date }}</td>
 						<td>{{ item.quantity }}</td>
 						<td>{{ item.job.address }}</td>
+            <td><a href="{% url 'delete' item.model item.pk %}" id="delete_po_item_button">del</a></td>
 					</tr>
       	  {% endfor %}
       	</table>

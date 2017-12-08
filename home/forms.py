@@ -124,6 +124,6 @@ class purchase_order_choice_form(forms.Form):
 	purchase_order_number = forms.ModelChoiceField(queryset=Purchase_orders.objects.all(), to_field_name="order_no", widget=forms.Select(attrs={'id':'purchase_order_number_input'}))
 
 class delete_job_form(forms.Form):
-	job_deletion_selection = forms.ModelChoiceField(queryset=Jobs.objects.all(), to_field_name="address")
-	security_field_1 = forms.CharField()
-	security_field_2 = forms.CharField()
+	job_deletion_selection = forms.ModelChoiceField(queryset=Jobs.objects.all(), to_field_name="address", widget = forms.Select(attrs={'id':'delete_job_choice_input'}))
+	security_field_1 = forms.CharField(widget = forms.TextInput(attrs={'id':'security_field_1'}))
+	security_field_2 = forms.CharField(widget = forms.TextInput(attrs={'id':'security_field_2'}))

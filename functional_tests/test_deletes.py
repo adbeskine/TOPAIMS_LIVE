@@ -482,8 +482,9 @@ class DeletesTest(FunctionalTest):
 		self.click(base_element=f'Note_{job_view_note_to_delete.pk}', element='delete_note_button')
 		
 		# The page refreshes and the note is gone
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('job', kwargs={'job_id':'200ParkAvenue'}), self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn('job 1 title 1', self.browser.page_source)) # REFRACT - compare element source not whole page
-		self.assertIn('job 1 title 2', self.browser.page_source)
+		self.wait_for(lambda: self.assertIn('job 1 title 2', self.browser.page_source))
 	
 		
 		# Marek sees a job note he wants to delete on the HOME PAGE
@@ -499,6 +500,7 @@ class DeletesTest(FunctionalTest):
 		self.click(base_element=f'Note_{home_page_note_to_delete.pk}', element='delete_note_button')
 		
 		# The page refreshes and the note is gone
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('homepage'), self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn('job 1 title 3', self.browser.page_source)) # REFRACT - compare element source not whole page
 		self.assertIn('job 1 title 4', self.browser.page_source)
 	
@@ -514,6 +516,7 @@ class DeletesTest(FunctionalTest):
 		self.click(base_element=f'Note_{admin_note_to_delete.pk}', element='delete_note_button')
 		
 		# The page refreshes and the note is gone
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('homepage'), self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn('admin note 1 title', self.browser.page_source)) # REFRACT - compare element source not whole page
 		self.assertIn('admin note 2 title', self.browser.page_source)
 	
@@ -531,6 +534,7 @@ class DeletesTest(FunctionalTest):
 		self.click(base_element=f'Shopping_list_items_{shopping_list_page_item_to_delete.pk}', element='delete_shopping_list_item_button')
 	
 		# The page refreshes and the item is gone
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('shopping_list'), self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn('job 1 shopping list item 1', self.browser.page_source))
 		self.assertIn('job 1 shopping list item 2', self.browser.page_source)
 	
@@ -544,6 +548,7 @@ class DeletesTest(FunctionalTest):
 		self.click(base_element=f'Shopping_list_items_{home_page_shopping_list_item_to_delete.pk}', element='delete_shopping_list_item_button')
 		
 		# The page refreshes and the item is gone
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('homepage'), self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn('job 1 shopping list item 2', self.browser.page_source))
 	
 		
@@ -560,9 +565,10 @@ class DeletesTest(FunctionalTest):
 		# He clicks on the items name and is redirected to the purchase order view in which the item is contained
 		self.click(f'po_link_item_{purchase_order_item_to_delete.pk}')
 		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':purchase_order_item_to_delete.PO.order_no}), self.browser.current_url))
-	
+		purchase_order_url = self.browser.current_url
 		# on the far right hand side of the item's row is a 'del' hyperlink. he clicks it, the page refreshes and the item is delieted
 		self.click(base_element=f'PO_item_{purchase_order_item_to_delete.pk}', element='delete_po_item_button')
+		self.wait_for(lambda: self.assertEqual(purchase_order_url, self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn(f'PO_item_{purchase_order_item_to_delete.pk}', self.browser.page_source))
 	
 		
@@ -579,24 +585,29 @@ class DeletesTest(FunctionalTest):
 		# Marek clicks the small 'del' hyperlink on the far right of the item
 		self.click(base_element=f'en_route_item_{acquired_shopping_list_item_to_delete.pk}', element='delete_item_button') #item.model = acquired, if model == 'acquired' render del button
 		# The page refreshes and the item is no longer there
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('job', kwargs={'job_id':'200ParkAvenue'}), self.browser.current_url))
 		self.wait_for(lambda: self.assertNotIn(f'en_route_item_{acquired_shopping_list_item_to_delete.pk}', self.browser.page_source))
 	
+		
+
+
+
 		#-- Job --#
 	
 		# in the jobs view marek sees a dropdown menu in the top right corner where there's a link saying 'delete job'
 		self.browser.get(self.live_server_url + reverse('jobs'))
 		self.wait_until_visible('all_jobs_panel')
 	
-		self.click('DROPDOWN MENU TOGGLE ID')
-		self.wait_until_visible('DROPDOWN MENU')
+		self.click('jobsDropdownMenuButton')
+		self.wait_until_visible('jobsDropDown')
 	
 		# clicking this redirects to a delete job page
-		self.click('LINK TO DELETE JOB PAGE')
+		self.click('delete_job_page_link')
 		# here David sees a warning saying:
 		#  "WARNING - THIS WILL PERMANENTLY DELETE EVERYTHING LINKED TO THIS JOB. EVERY ITEM, NOTE, SHOPPING LIST, PURCHASE ORDER, SCHEDULED ITEM - EVERYTHING - THERE IS NO UNDOING THIS DELETE"
 	
 		# David sees a dropdown menu from which he selects job2 to delete (601 Chiron Building)
-		delete_job_choice = Select(self.browser.find_element_by_id(delete_job_choice_input))
+		delete_job_choice = Select(self.browser.find_element_by_id('delete_job_choice_input'))
 		delete_job_choice.select_by_value('601 Chiron Building')
 		# He sees another two fields saying something along the lines of 'you must type the address of this job twice correcly in order to delete'. He fills this out incorrectly
 		self.browser.find_element_by_id('security_field_1').send_keys('601 Chiron Building')
@@ -607,10 +618,12 @@ class DeletesTest(FunctionalTest):
 		self.wait_for(lambda: self.assertIn('security fields did not match, nothing deleted', self.browser.page_source))
 		
 		# He types it correctly this time, hits submit and finds everything to do with the job deleted.
-		delete_job_choice = Select(self.browser.find_element_by_id(delete_job_choice_input))
+		delete_job_choice = Select(self.browser.find_element_by_id('delete_job_choice_input'))
 		delete_job_choice.select_by_value('601 Chiron Building')
 		self.browser.find_element_by_id('security_field_1').send_keys('601 Chiron Building')
 		self.browser.find_element_by_id('security_field_2').send_keys('601 Chiron Building')
+
+		self.click('delete_job_form_submit_button')
 	
 		self.wait_for(lambda: self.assertIn('601 Chiron Building JOB DELETED', self.browser.page_source))
 	

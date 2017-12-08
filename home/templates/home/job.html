@@ -47,13 +47,16 @@
     	<div class="card-body">
 
     		{% for note in notes %}
-    		<div class="card border-black text-center mb-2" id="Note_{{ note.pk }}">
+    		<div class="card border-black text-center mb-3" id="Note_{{ note.pk }}">
     			<div class="card-header">
     				{{ note.Title }}
     			</div>
     			<div class="card-body">
     				<p class="card-text"> {{ note.Text }} </p>
     			</div>
+          <div class="card-footer">
+            <a href="{% url 'delete' note.model note.pk %}" id="delete_note_button">del</a>
+          </div>
     		</div>
     		{% endfor %}
 
@@ -208,6 +211,9 @@
                   {{ item.fullname }} </a>| status - {{ item.status }}
                   {% if item.delivery_date %} | delivery: {{item.delivery_date}}
                   {% endif %}
+                  {% if item.model == "Acquired_Item" %}
+                    |<a href="{% url 'delete' item.model item.pk %}" id="delete_item_button">del</a>
+                  {% endif %}
                 </p>
                 <button>
                   <a href="{% url 'mark_on_site' item.pk %}" id="delivered_button"> arrived on-site </a>
@@ -230,6 +236,9 @@
                   <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
                 {% endif %}
                 {{ item.fullname }} </a>| x {{ item.quantity }}
+                {% if item.model == "Acquired_Item" %}
+                  |<a href="{% url 'delete' item.model item.pk %}" id="delete_item_button">del</a>
+                {% endif %}
               </p>
             </div>
           </div>

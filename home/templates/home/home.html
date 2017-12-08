@@ -162,6 +162,9 @@
           		<p class="card-text"> {{ item.description }} x{{ item.quantity }} || {{ item.job.address }} ||
             		<a href="{% url 'acquired' item.pk %}" id="{{ item.model }}_{{ item.pk }}_acquired_button"> ACQUIRED </a>
           		</p>
+              <div class="d-flex justify-content-end">
+                <a href="{% url 'delete' item.model item.pk %}" id="delete_shopping_list_item_button">del</a>
+              </div>
         		</div>
       		</div>
     		{% endfor %}
@@ -218,6 +221,9 @@
     							<div class="card-body">
     								<p class="card-text"> {{ note.Text }} </p>
     							</div>
+                  <div class="card-footer">
+                    <a href="{% url 'delete' note.model note.pk %}" id="delete_note_button">del</a>
+                  </div>
     						</div>
 
     					{% endfor %}
@@ -236,6 +242,9 @@
     							<div class="card-body">
     								<p class="card-text"> {{ note.Text }} </p>
     							</div>
+                  <div class="card-footer">
+                    <a href="{% url 'delete' note.model note.pk %}" id="delete_note_button">del</a>
+                  </div>
     						</div>
 
     					{% endfor %}

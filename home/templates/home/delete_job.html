@@ -1,0 +1,11 @@
+{% extends "home/base.html" %}
+{% block title %}TopMarks - Delete Job{% endblock %}
+{% block content %}
+
+<form action="{% url 'delete_job' %}" method="POST">
+	{% csrf_token %}
+	{{ delete_job_form }}
+	<input type="Submit" value="Delete" id="delete_job_form_submit_button">
+</form>
+
+{% endblock %}

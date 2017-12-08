@@ -512,7 +512,8 @@ def acquired(request, pk):
 			quantity = shopping_list_item.quantity,
 			job = shopping_list_item.job,
 			status = 'ACQUIRED',
-			delivery_date = settings.NOW
+			delivery_date = settings.NOW,
+			model='Acquired_Item'
 			)
 
 		messages.add_message(request, messages.INFO, f'{shopping_list_item.description} acquired')
@@ -625,6 +626,11 @@ def delete(request, model=None, pk=None):
 
 	if request.session['logged_in'] == True:
 
+		if request.META['SERVER_NAME'] == 'testserver':
+			previous_page = reverse('homepage') # this is what happens in the unit tests. The redirect is tested in the FTs
+		else:
+			previous_page = request.META['HTTP_REFERER'] # does note exist when unit testing
+
 		if model and pk:
 
 			if model == 'Shopping_list_items':
@@ -643,7 +649,13 @@ def delete(request, model=None, pk=None):
 				item = Notes.objects.filter(pk=pk).first()
 				item.delete()
 
+			return redirect(previous_page)
+
 		elif model==None and pk==None:
+
+			context = {
+				'delete_job_form':delete_job_form
+			}
 
 			if request.method == 'POST':
 
@@ -674,18 +686,22 @@ def delete(request, model=None, pk=None):
 						Purchase_order_items_left = Items.objects.filter(job=job)
 						for item in Purchase_order_items_left:
 							item.job=None
+							item.description = f'{item.description} --> {job.address}'
 							item.save()
 
 						job.delete()
 
-					else:
-						print(delete_job_address)
-						print(security_field_1)
-						print(security_field_2) # check_and_render(template with delete job form) with alert saying 'security didn't match' or something
-				else:
-					print(form.errors)
+						messages.add_message(request, messages.INFO, f'{job.address} JOB DELETED')
 
-		# return check_and_render(template with delete job form)
+						return redirect(reverse('homepage'))
+
+					else:
+						messages.add_message(request, messages.INFO, 'security fields did not match, nothing deleted')
+						return redirect(reverse('delete_job'))
+				else:
+					print(form.errors) # for test debugging
+
+			return check_and_render(request, 'home/delete_job.html', context)
 
 	return redirect(reverse('homepage')) # this is the redirect for all the non-job object deletions
 

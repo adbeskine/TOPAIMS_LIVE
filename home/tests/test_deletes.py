@@ -433,13 +433,13 @@ class DeletesTest(Test):
 			]
 
 		Purchase_order_items_to_preserve = [
-			Items.objects.filter(description='job 2 purchase order 1 item 1 description'),
-			Items.objects.filter(description='job 2 purchase order 1 item 2 description'),
-			Items.objects.filter(description='job 2 purchase order 1 item 3 description'),
+			Items.objects.filter(fullname='job 2 purchase order 1 item 1 fullname'),
+			Items.objects.filter(fullname='job 2 purchase order 1 item 2 fullname'),
+			Items.objects.filter(fullname='job 2 purchase order 1 item 3 fullname'),
 
-			Items.objects.filter(description='job 2 purchase order 2 item 1 description'),
-			Items.objects.filter(description='job 2 purchase order 2 item 2 description'),
-			Items.objects.filter(description='job 2 purchase order 2 item 3 description'),
+			Items.objects.filter(fullname='job 2 purchase order 2 item 1 fullname'),
+			Items.objects.filter(fullname='job 2 purchase order 2 item 2 fullname'),
+			Items.objects.filter(fullname='job 2 purchase order 2 item 3 fullname'),
 			]
 		Purchase_orders_to_preserve = [
 			Purchase_orders.objects.filter(supplier_ref='job 2 po 1'),
