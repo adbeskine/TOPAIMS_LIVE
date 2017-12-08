@@ -238,6 +238,72 @@
 
 
 #-------------------------------------#
+#             DELETIONS               #
+#-------------------------------------#
+
+#-- Schedule items --#
+  # done
+
+#-- Notes --#
+
+# Marek sees a note he wants to delete in the JOB VIEW
+
+# Marek clicks the 'del' hyperlink at the very bottom of the notes text
+# The page refreshes and the note is gone -- alert maybe?
+
+
+# Marek sees a job note he wants to delete on the HOME PAGE
+
+# Marek clicks the 'del' hyperlink at the very bottom of the notes text
+# The page refreshes and the note is gone -- alert maybe?
+
+
+# Marek sees an admin note he wants to delete on the HOME PAGE
+
+# Marek clicks the 'del' hyperlink at the very bottom of the notes text
+# The page refreshes and the note is gone -- alert maybe?
+
+
+
+#-- Shopping list items --#
+
+# Marek sees a shopping list item he wants to delete in the SHOPPING LIST PAGE
+
+# Marek clicks the 'del' hyperlink on the far right of the item
+# The page refreshes and the item is gone
+
+
+# Marek sees a shopping list item he wants to delete in the HOME PAGE
+
+# Marek clicks the 'del' hyperlink on the far right of the item
+# The page refreshes and the item is gone
+
+#-- Purchase Order items --#
+
+# Marek sees an item he wants to delete
+# He clicks on the items name and is redirected to the purchase order view in which the item is contained
+# on the far right hand side of the item's row is a 'del' hyperlink
+# he clicks it, the page refreshes and the item is delieted
+
+#-- Items objects with no purchase orders (acquired shopping list items) --#
+
+# Marek sees an acquired shopping list item in the 'en-route' section of a job he wishes to delete
+# Marek clicks the small 'del' byperlink on the far right of the item
+# The page refreshes and the item is no longer there
+
+#-- Job --#
+
+# in the jobs view marek sees a dropdown menu in the top right corner where there's a link saying 'delete job'
+# clicking this redirects to a delete job page where David sees an alert saying:
+#  "WARNING - THIS WILL PERMANENTLY DELETE EVERYTHING LINKED TO THIS JOB. EVERY NOTE, SHOPPING LIST, SCHEDULED ITEM - EVERYTHING - THERE IS NO UNDOING THIS DELETE"
+# David sees a dropdown menu from which he can select the job he wants to delete
+# He selects a job and sees another two fields saying something along the lines of 'you must type the address of this job twice correcly in order to delete'
+# He types the job incorrectly and hits submit - the page refreshes with an alert saying 'security fields did not match'
+# He types it correctly this time, hits submit and finds everything to do with the job deleted.
+# He finds all the related purchase orders and purchase order items remain, however, there is no job key visible and the job address is simply appended to the fullname of each item 
+
+
+#-------------------------------------#
 #     DEDICATED SHOPPING LIST PAGE    #
 #-------------------------------------#
 
@@ -259,10 +325,6 @@
 
 # when Marek clicks acquired the item disappears from the shopping list - an alert saying 'x marked as aquired' appears - the item appears as 'acquired' in the 'en route' section of whichever job 
 
-
-#-------------------------------------#
-#       ITEM REJECTION FORM PAGE      #
-#-------------------------------------#
 
 #-------------------------------------#
 #          SYNCHRONISATIONS           #

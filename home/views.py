@@ -368,6 +368,8 @@ def new_note(request, job_id): # LOGGEDIN ADMIN
 					job = Jobs.objects.filter(job_id=job_id).first(),
 					)
 				return redirect(reverse('job', kwargs={'job_id': job_id}))
+		else:
+			print(form.errors)
 
 def update_job(request, job_id, status): # LOGGEDIN ADMIN
 	
@@ -434,6 +436,9 @@ def new_schedule_item(request, job_id):
 			messages.add_message(request, messages.INFO, new_schedule_item_message)
 
 			return redirect(reverse('job', kwargs={'job_id':job_id}))
+
+		else:
+			print(form.errors)
 
 	else:
 		return HttpResponse('how about no?')

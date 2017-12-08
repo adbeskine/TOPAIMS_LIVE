@@ -17,3 +17,6 @@ os.system("python manage.py test home.tests.test_home_page")
 
 os.system("echo TEST PURCHASE ORDER VIEWS")
 os.system("python manage.py test home.tests.test_purchase_order_view")
+
+os.system("echo TEST DELETES")
+os.system("python manage.py test home.tests.test_deletes")
