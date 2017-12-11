@@ -1,5 +1,5 @@
 from selenium import webdriver
-from sensitive import WEBSITE_PASSWORD as password
+from sensitive import user_passwords
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import time
@@ -22,6 +22,18 @@ class FunctionalTest(StaticLiveServerTestCase):
 	def tearDown(self):
 		self.browser.quit()
 
+	def loginManager(self, browser):
+		browser.get(self.live_server_url + reverse('login'))
+		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
+		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[3])
+		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+
+	def loginStaff(self, browser):
+		browser.get(self.live_server_url + reverse('login'))
+		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
+		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[1])
+		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+
 	#----- HELPER METHODS -----#
 
 	def wait_for(self, func):
@@ -35,8 +47,8 @@ class FunctionalTest(StaticLiveServerTestCase):
 					raise e
 				time.sleep(0.5)
 
-	def login(self, browser):
+	def loginSuper(self, browser):
 		browser.get(self.live_server_url + reverse('login'))
 		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(password)
+		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[5])
 		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)

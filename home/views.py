@@ -34,7 +34,17 @@ def check_and_render(request, template, context = None):
 def convert_to_date(str_date, form='%Y-%m-%d'):
 	dt = datetime.datetime.strptime(str_date, form)
 	return dt.date()
-#-- VIEWS --#
+
+
+
+
+
+#############################################################
+#############################################################
+##                        PAGES                            ##
+#############################################################
+#############################################################
+
 
 
 
@@ -127,17 +137,6 @@ def login(request): #
 
 	
 	return render(request, 'home/login.html')
-
-def unlock(request, unlock_password):
-	site = Site_info.objects.first()
-	
-	if unlock_password == site.password:
-
-		Site_info.objects.filter(pk=1).update(locked=False, password=generate_password())
-		del request.session['incorrect_password_attempts']
-		return redirect(reverse('login'))
-	else:
-		return redirect(reverse('login'))
 
 def new_job(request): # LOGGEDIN, ADMIN
 
@@ -331,9 +330,37 @@ def purchase_orders(request, order_no=None):
 
 	return check_and_render(request, 'home/purchase_orders.html', context)
 
+
+
+
+
+
+
+
 #############################################################
 #############################################################
-##                   CRUD                                  ##
+##                   MISC FUNCTIONS                        ##
+#############################################################
+#############################################################
+
+
+def unlock(request, unlock_password):
+	site = Site_info.objects.first()
+	
+	if unlock_password == site.password:
+
+		Site_info.objects.filter(pk=1).update(locked=False, password=generate_password())
+		del request.session['incorrect_password_attempts']
+		return redirect(reverse('login'))
+	else:
+		return redirect(reverse('login'))
+
+
+
+
+#############################################################
+#############################################################
+##                         CRUD                            ##
 #############################################################
 #############################################################
 

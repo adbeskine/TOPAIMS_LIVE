@@ -339,7 +339,7 @@ class DeletesTest(FunctionalTest):
 			now = settings.NOW
 			Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
 			self.browser = webdriver.Chrome()
-			self.login(self.browser)
+			self.loginSuper(self.browser)
 
 			# Job 1
 			self.create_custom_job(name='Tony Stark', email='TonyS@StarkIndustries.com', phone='01234567898', address='200 Park Avenue', note='This is job 1')

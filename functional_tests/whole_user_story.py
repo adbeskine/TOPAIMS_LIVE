@@ -238,6 +238,29 @@
 
 
 #-------------------------------------#
+#     DEDICATED SHOPPING LIST PAGE    #
+#-------------------------------------#
+
+# Marek navigates to the dedicated shopping list and finds all the shopping list items from every job
+
+# on every shopping list item Marek sees description | quantity | job | acquired
+
+# when Marek clicks acquired the item disappears from the shopping list - an alert saying 'x marked as aquired' appears - the item appears as 'acquired' in the 'en route' section of whichever job 
+
+# at the bottom of the page marek sees an 'add shopping list item form'
+	# fields: 
+	# description
+	# quantity
+	# job
+
+# when marek fills in the form and submits, the shopping list item appears at the top of the shopping list and in the 'needed items' section of the job view
+
+# on every shopping list item Marek sees description | quantity | job | acquired
+
+# when Marek clicks acquired the item disappears from the shopping list - an alert saying 'x marked as aquired' appears - the item appears as 'acquired' in the 'en route' section of whichever job 
+
+
+#-------------------------------------#
 #             DELETIONS               #
 #-------------------------------------#
 
@@ -304,26 +327,110 @@
 
 
 #-------------------------------------#
-#     DEDICATED SHOPPING LIST PAGE    #
+#           PERMISSIONS               #
 #-------------------------------------#
 
-# Marek navigates to the dedicated shopping list and finds all the shopping list items from every job
+#-- staff --#
 
-# on every shopping list item Marek sees description | quantity | job | acquired
+	#-- visibility --#
 
-# when Marek clicks acquired the item disappears from the shopping list - an alert saying 'x marked as aquired' appears - the item appears as 'acquired' in the 'en route' section of whichever job 
+		# A staff member logs in with the staff password and is redirected to the HOMEPAGE
+		# On the homepage he can see the deliveries and shopping list
+		# He cannot see the Notes Panel and the Purchase order panel
 
-# at the bottom of the page marek sees an 'add shopping list item form'
-	# fields: 
-	# description
-	# quantity
-	# job
+		# He then navigates to the shopping list and finds everything rendering like normal
 
-# when marek fills in the form and submits, the shopping list item appears at the top of the shopping list and in the 'needed items' section of the job view
+		# He then navigates to the Jobs page
+		# He sees only the ongoing jobs tab, the quotes and completed are not visible, the dropdown menu which houses 'delete job' is not visible
 
-# on every shopping list item Marek sees description | quantity | job | acquired
+		# He navigates to an ongoing job view
+		# He sees the profile and the site management panel
+		# In the site management panel he only sees en-route and on-site. 
+		# The upcoming schedule items, purchase order tab, notes panel, status drop down menu (on the profile) and schedule of items panel are not visible
 
-# when Marek clicks acquired the item disappears from the shopping list - an alert saying 'x marked as aquired' appears - the item appears as 'acquired' in the 'en route' section of whichever job 
+		# He attempts to navigate to the new job form page with the url and finds the page he was on simply reloads
+		# He attempts to navigae to the purchase order browser and finds the page he was on simply reloads
+		# He clicks on an item name which links to it's purchase order and finds the page he was on simply reloads
+		# He attempts to navigate to the delete job page with the ulr and finds the page he was on simply reloads
+
+	#-- CRU --# (deletes is it's own test, the test that staff cannot update items they cannot see the update option for (job status) is covered between the above tests and the unit tests)
+
+		# The staff member successfully creates a shopping list item
+		# The staff member successfully views the shopping list item in the shopping list
+		# The staff member successfully 'acquires' the shopping list item (this is both 'updating' a shopping list item and 'creating' an acquired item)
+
+		# The staff member can successfully view PO items on the home page delivery panel for all three tabs
+		# For all three tabs they can successfully mark them as acquired, reject and reschedule them, and reject them
+		# The staff member can successfully view PO items on the job view on-site and en-route panel
+		# The staff member can successfully mark PO item on site in the job view panel
+
+		# The staff member can successfully view acquired items on the job view on-site and en-route panel
+		# The staff member can successfully mark the acquired item on site on the job view en-route panel
+
+	#-- deletes --#
+		# C+P all deletes test from deletes FT altered for this specific use case. Assert that on every delete the page simply reloads 
+
+
+#-- manager --#
+
+		#-- visiblity --#
+
+			# A manager logs in with the manager password and is redirected to the HOMEPAGE
+			# They see everything on the homepage
+
+			# He then navigates to the shopping list and finds everything rendering like normal
+
+			# He navigates to the Jobs page
+			# Everything loads as normal except the delete job option
+
+			# He navigates to a job view
+			# Everything loads as normal
+
+			# He can navigate to the new job form as normal
+
+			# He can navigate to the purchase order browser as normal
+			
+			# He can navigate to a specific purchase order as normal (the links in the item names remain untouched for this feature, the filter happens when loading the PO)
+
+			# He attempts to navigate to the delete job page by typing in the url and finds the page simply reloads
+
+		#-- CRU --# (deletes is it's own test, the test that staff cannot update items they cannot see the update option for (job status) is covered between the above tests and the unit tests)
+
+			# The manager successfully creates a shopping list item
+			# The manager successfully sees the shopping list item
+			# The manager successfully 'acquires' the shopping list item (this is both 'updating' a shopping list item and 'creating' an acquired item)
+
+			# The manager successfully adds a job note
+			# The manager successfully reads the job note
+			# TODO - the manager successfully edits the job note
+
+			# The manager successfully creates a purchase order
+			# The staff member can successfully view PO items on the home page delivery panel for all three tabs
+			# For all three tabs they can successfully mark them as acquired, reject and reschedule them, and reject them
+			# The manager can successfully view PO items on the job view on-site and en-route panel
+			# The manager can successfully mark PO item on site in the job view panel
+
+			# The manager can successfully view acquired items on the job view on-site and en-route panel
+			# The manager can successfully mark the acquired item on site on the job view en-route panel
+
+			# The manager can successfully create schedule items
+			# The manager can successfully view schedule items in the job view
+			# The manager can successfully edit the dates for the schedule items
+
+			# The manager can see all quotes, ongoing and completed jobs
+			# The manager can update jobs' statuses for each job
+
+		#-- deletes --#	
+			# C+P all deletes test from deletes FT altered for this specific use case. Assert that on every delete the page simply reloads 
+
+
+#-- superuser --#
+	
+	# the entire functional test suite for the whole software is run as a superuser.
+
+
+ 
+
 
 
 #-------------------------------------#
