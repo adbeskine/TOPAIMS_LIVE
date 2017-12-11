@@ -20,7 +20,7 @@ class Jobs(models.Model):
 
 class Notes(models.Model):
 	Title = models.CharField(max_length=100, default='')
-	Text = models.CharField(max_length=100, default='')
+	Text = models.TextField(default='')
 	Timestamp = models.DateTimeField(auto_now_add=True)
 	job = models.ForeignKey(Jobs, null=True)
 	model = models.CharField(default='Notes', max_length=100)
