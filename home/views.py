@@ -678,6 +678,7 @@ def delete(request, model=None, pk=None):
 
 			return redirect(previous_page)
 
+#--------------------------------delete job page-------------------------------------------------#
 		elif model==None and pk==None:
 
 			context = {

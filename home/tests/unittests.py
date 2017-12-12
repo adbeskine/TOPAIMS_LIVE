@@ -20,3 +20,6 @@ os.system("python manage.py test home.tests.test_purchase_order_view")
 
 os.system("echo TEST DELETES")
 os.system("python manage.py test home.tests.test_deletes")
+
+# os.system("echo TEST PERMISSIONS")
+# os.system("python manage.py test home.tests.test_permissions")
