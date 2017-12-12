@@ -9,7 +9,7 @@ class LoginPageTest(Test):
 	#-- HELPER METHODS --#
 
 	def post_correct_password(self):
-		self.client.post('/login/', {'password': password}, follow=True)
+		self.loginSuper()
 
 	def post_incorrect_password(self):
 		self.client.post('/login/', {'password': 'incorrect password'}, follow=True)

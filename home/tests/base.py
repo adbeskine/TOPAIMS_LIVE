@@ -1,5 +1,5 @@
 from django.test import TestCase
-from sensitive import user_passwords
+from sensitive import user_passwords, test_data
 from django.urls import reverse
 from home.models import Site_info
 
@@ -8,16 +8,16 @@ class Test(TestCase):
 	#-- HELPER METHODS --#
 
 	def login(self):
-		self.client.post('/login/', {'password':user_passwords.popitem()[5]}, follow=True) # <- for backwards compatability with older tests
+		self.client.post('/login/', {'password':test_data['super']}, follow=True) # <- for backwards compatability with older tests
 
 	def loginSuper(self):
-		self.client.post('/login/', {'password':user_passwords.popitem()[5]}, follow=True)
+		self.client.post('/login/', {'password':test_data['super']}, follow=True)
 
 	def loginManager(self):
-		self.client.post('/login/', {'password':user_passwords.popitem()[3]}, follow=True)
+		self.client.post('/login/', {'password':test_data['manager']}, follow=True)
 
 	def loginStaff(self):
-		self.client.post('/login/', {'password':user_passwords.popitem()[1]}, follow=True)
+		self.client.post('/login/', {'password':test_data['staff']}, follow=True)
 
 
 	def logout(self):

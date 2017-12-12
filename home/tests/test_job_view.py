@@ -17,7 +17,7 @@ current_date = now
 current_date_string = str(current_date.strftime('%Y/%d/%m'))
 one_month_future = current_date + relativedelta(months=1)
 one_month_future_string = str(one_month_future.strftime('%Y/%d/%m'))
-job = Jobs.objects.first()
+
 
 
 class JobViewTest(Test):
@@ -52,21 +52,21 @@ class JobViewProfileTests(JobViewTest):
 	def test_job_data_in_context(self):
 		# setup has landed already in job view
 		response = self.client.get(reverse('job', kwargs={'job_id':'200ParkAvenue'}))
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		self.assertEquals(response.context['job'], job)
 
 	def test_job_status_changes(self):
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		self.update_job_status(job.job_id, 'ongoing')
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		self.assertEquals(job.status, 'ongoing')
 
 		self.update_job_status(job.job_id, 'completed')
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		self.assertEquals(job.status, 'completed')
 
 		self.update_job_status(job.job_id, 'quote')
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		self.assertEquals(job.status, 'quote')
 
 
@@ -85,7 +85,7 @@ class JobViewNotesTests(JobViewTest):
 	#------------------------#
 
 	def test_note_creation(self):
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 
 		self.create_note(title_1, text_1, job.job_id) # titles and texts defined just under imports
 		# redirect is asserted in the helper method
@@ -96,7 +96,7 @@ class JobViewNotesTests(JobViewTest):
 		self.assertEquals(job_notes[0].Text, text_1)
 
 	def test_multiple_note_creation(self):
-		job = Jobs.objects.first()
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		time.sleep(2)
 		self.create_note(title_1, text_1, job.job_id)
 		time.sleep(2)
@@ -138,10 +138,11 @@ class JobViewScheduleOfItemsTest(JobViewTest):
 
 
 	def test_new_scheduled_item_creation_one_date(self):
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		response = self.create_schedule_item('test item 1 description', current_date, 1, '200ParkAvenue')
 
 
-		scheduled_item_1 = Scheduled_items.objects.first()
+		scheduled_item_1 = Scheduled_items.objects.filter(description='test item 1 description').first()
 
 		self.assertRedirects(response, reverse('job', kwargs={'job_id':'200ParkAvenue'}))
 		storage = messages.get_messages(response)
@@ -154,8 +155,9 @@ class JobViewScheduleOfItemsTest(JobViewTest):
 		self.assertEquals(scheduled_item_1.job, job)
 
 	def test_new_schedule_item_creation_date_range(self):
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 		response = self.create_schedule_item('test item 1 description', current_date, 1, '200ParkAvenue', one_month_future)
-		scheduled_item_1 = Scheduled_items.objects.first()
+		scheduled_item_1 = Scheduled_items.objects.filter(description='test item 1 description').first()
 
 		self.assertRedirects(response, reverse('job', kwargs={'job_id':'200ParkAvenue'}))
 		storage = messages.get_messages(response)
@@ -194,6 +196,7 @@ class JobViewScheduleOfItemsTest(JobViewTest):
 		self.assertRedirects(response, reverse('job', kwargs={'job_id':'200ParkAvenue'}))
 
 	def test_purchase_order(self): # REFRACT
+		job = Jobs.objects.filter(address='200 Park Avenue').first()
 
 		PO_data = {
 		'Supplier':'Stark Industries',

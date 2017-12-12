@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib import messages
 from sensitive import WEBSITE_PASSWORD as password
+from sensitive import user_passwords
 from .models import Site_info, Jobs, Notes, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import os, random, string, re
 from home.forms import delete_job_form, new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form
@@ -22,6 +23,18 @@ def generate_password():
 	random.seed = (os.urandom(1024))
 	return ''.join(random.choice(chars) for i in range(length))
 
+
+def check_permissions(request, minimum_level):
+	if request.META['SERVER_NAME'] == 'testserver':  # this is what happens in the unit tests. The redirect is tested in the FTs
+		previous_page = reverse('homepage')
+	else:
+		previous_page = request.META['HTTP_REFERER'] # does not exist when unit testing
+	if request.session['perm_level'] >= minimum_level:
+		perm_level = request.session['perm_level']
+		return True
+	elif request.session['perm_level'] < minimum_level:
+		return redirect(previous_page)
+
 def check_and_render(request, template, context = None):
 	try:
 		if request.session['logged_in'] == True:
@@ -34,7 +47,6 @@ def check_and_render(request, template, context = None):
 def convert_to_date(str_date, form='%Y-%m-%d'):
 	dt = datetime.datetime.strptime(str_date, form)
 	return dt.date()
-
 
 
 
@@ -113,12 +125,26 @@ def login(request): #
 			return redirect(reverse('login'))
 		elif site.locked == False:
 			pass
+
+		try:
+
+			if user_passwords[request.POST.get("password")]:
+				user = user_passwords[request.POST.get("password")]
+				request.session.flush()
+				request.session['logged_in'] = True
+				# match password with perms and put corresponding perm level as integer in session
+				if user == 'staff':
+					request.session['perm_level'] = 1
+				elif user == 'manager':
+					request.session['perm_level'] = 2
+				elif user == 'super':
+					request.session['perm_level'] = 3
+
+
+				return redirect(reverse('homepage'))
 		
-		if request.POST.get("password") == password:
-			request.session['logged_in'] = True
-			return redirect(reverse('homepage'))
+		except KeyError:
 		
-		else:
 			try:
 				request.session['incorrect_password_attempts'] += 1
 			except KeyError:
@@ -169,8 +195,12 @@ def new_job(request): # LOGGEDIN, ADMIN
 				job = job
 				)
 
-
 			return redirect(reverse('job', kwargs={'job_id':job_id}))
+
+	if check_permissions(request, 2) == True:
+		pass
+	else:
+		return check_permissions(request, 2)
 
 	return check_and_render(request, 'home/new_job_form.html', {'form':form}) 
 
@@ -314,6 +344,12 @@ def purchase_orders(request, order_no=None):
 			'item_list':item_list,
 			'purchase_order_no':purchase_order_no
 		}
+
+		if check_permissions(request, 2) == True:
+			pass
+		else:
+			return check_permissions(request, 2)
+
 		return check_and_render(request, 'home/purchase_order.html', context)
 
 	
@@ -324,9 +360,15 @@ def purchase_orders(request, order_no=None):
 
 			return redirect(reverse('purchase_orders', kwargs={'order_no':purchase_order.order_no}))
 
+	
 	context = {
 		'purchase_order_choice_form':purchase_order_choice_form
 	}
+
+	if check_permissions(request, 2) == True:
+		pass
+	else:
+		return check_permissions(request, 2)
 
 	return check_and_render(request, 'home/purchase_orders.html', context)
 
@@ -402,6 +444,11 @@ def update_job(request, job_id, status): # LOGGEDIN ADMIN
 	
 	if request.method == 'GET':
 
+		if check_permissions(request, 2) == True:
+			pass
+		else:
+			return check_permissions(request, 2)
+
 		job = Jobs.objects.get(job_id=job_id)
 
 		if status == 'ongoing':
@@ -432,6 +479,12 @@ def update_job(request, job_id, status): # LOGGEDIN ADMIN
 def new_schedule_item(request, job_id):
 	
 	if request.method == 'POST':
+
+		if check_permissions(request, 2) == True:
+			pass
+		else:
+			return check_permissions(request, 2)
+
 		form = new_scheduled_item_form(request.POST)
 
 		if form.is_valid():
@@ -473,6 +526,12 @@ def new_schedule_item(request, job_id):
 def purchase_order(request, job_id=None): #SNAGGING, CONDITIONAL VALIDATION
 
 	if request.method == 'POST':
+
+		if check_permissions(request, 2) == True:
+			pass
+		else:
+			return check_permissions(request, 2)
+
 		form = purchase_order_form(request.POST)
 
 		if form.is_valid():
@@ -553,6 +612,10 @@ def acquired(request, pk):
 
 def mark_showroom(request, pk):
 
+	if check_permissions(request, 1) == True:
+		pass
+	else:
+		return check_permissions(request, 1)
 	item = Items.objects.filter(pk=pk).first()
 	item.status='IN SHOWROOM'
 	item.save()
@@ -574,6 +637,10 @@ def mark_on_site(request, pk):
 
 def reject_delivery(request, pk): # VALIDATION
 	if request.method == 'POST':
+		if check_permissions(request, 1) == True:
+			pass
+		else:
+			return check_permissions(request, 1)
 		form = reject_delivery_form(request.POST)
 		item = Items.objects.filter(pk=pk).first()
 		job = item.job
@@ -624,6 +691,10 @@ def schedule_item(request, function, pk):
 	job = scheduled_item.job
 
 	if request.method == 'POST':
+		if check_permissions(request, 2) == True:
+			pass
+		else:
+			return check_permissions(request, 2)
 		
 		if function == 'update':
 			form = update_scheduled_item_date_form(request.POST)
@@ -637,6 +708,10 @@ def schedule_item(request, function, pk):
 					scheduled_item.save()
 
 		elif function == 'delete':
+			if check_permissions(request, 3) == True:
+				pass
+			else:
+				return check_permissions(request, 3)
 			scheduled_item.delete()
 
 		else:
@@ -652,6 +727,11 @@ def schedule_item(request, function, pk):
 def delete(request, model=None, pk=None):
 
 	if request.session['logged_in'] == True:
+
+		if check_permissions(request, 3) == True:
+			pass
+		else:
+			return check_permissions(request, 3)
 
 		if request.META['SERVER_NAME'] == 'testserver':
 			previous_page = reverse('homepage') # this is what happens in the unit tests. The redirect is tested in the FTs
@@ -733,3 +813,60 @@ def delete(request, model=None, pk=None):
 
 	return redirect(reverse('homepage')) # this is the redirect for all the non-job object deletions
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def login(request): #
+	# site = Site_info.objects.first()
+# 
+	# if site.locked == True:
+		# return render(request, 'home/locked.html')
+	# else:
+		# pass
+# 	
+	# if request.method == 'POST':
+# 		
+		# if site.locked == True: # make sure the website isn't locked (for POST data not through website form) POST_MVP: proper django form, check for csrf token instead
+			# return redirect(reverse('login'))
+		# elif site.locked == False:
+			# pass
+# 		
+		# if request.POST.get("password") == password:
+			# request.session['logged_in'] = True
+			# return redirect(reverse('homepage'))
+# 		
+		# else:
+			# try:
+				# request.session['incorrect_password_attempts'] += 1
+			# except KeyError:
+				# request.session['incorrect_password_attempts'] = 0
+# 
+# 
+			# if request.session['incorrect_password_attempts'] < 5: 
+				# attempts_remaining = (5 - request.session['incorrect_password_attempts'])
+				# return render(request, 'home/login.html', {'password_alert': attempts_remaining}) #  # 
+# 
+			# elif request.session['incorrect_password_attempts'] >= 4: # LOCKS THE SITE just in case someone uses creative post requests everything is >= and not ==
+				# request.session['incorrect_password_attempts'] += 1
+# 				
+				# Site_info.objects.filter(pk=1).update(locked=True, password=generate_password())				
+				# return redirect(reverse('login')) # increment the attempts up to five then lock the site
+# 
+# 	
+	# return render(request, 'home/login.html')

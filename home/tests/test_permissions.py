@@ -200,9 +200,9 @@ class PermissionsTest(Test):
 
 		self.client.post(reverse('purchase_order_homepage'), data=PO_data, follow=True)
 
-	def check_get_redirects(self, reverse):
+	def check_get_redirects(self, urlname):
 		self.client.get(reverse('homepage'))
-		response = self.client.get(reverse, follow=True)
+		response = self.client.get(urlname)
 		self.assertRedirects(response, reverse('homepage'))
 
 
@@ -243,18 +243,18 @@ class PermissionsTest(Test):
 		self.loginStaff()
 
 		
-		self.check_get_redirects(reverse('new_job_form'))
+		self.check_get_redirects(urlname=reverse('new_job_form'))
 
-		self.check_get_redirects(reverse('purchase_orders', kwargs={'order_no':PO_item.order_no}))
+		self.check_get_redirects(urlname=reverse('purchase_orders', kwargs={'order_no':PO_item.PO.order_no}))
 
-		self.check_get_redirects(reverse('purchase_orders_browser'))
+		self.check_get_redirects(urlname=reverse('purchase_orders_browser'))
 
-		self.check_get_redirects(reverse('delete_job'))
+		self.check_get_redirects(urlname=reverse('delete_job'))
 
 	def test_visibility_permissions_manager(self):
 		self.loginManager()
 
-		self.check_get_redirects(reverse('delete_job'))
+		self.check_get_redirects(urlname=reverse('delete_job'))
 
 	def test_deletes_permissions_staff(self):
 
@@ -272,7 +272,7 @@ class PermissionsTest(Test):
 		job_note_query = Notes.objects.filter(Title='job 1 note 1 title')
 		job_note = job_note_query.first()
 
-		admin_note_query = Notes.objects.filter(Title='admin not 1 title')
+		admin_note_query = Notes.objects.filter(Title='admin note 1 title')
 		admin_note = admin_note_query.first()
 
 		self.loginStaff()
@@ -319,7 +319,7 @@ class PermissionsTest(Test):
 		job_note_query = Notes.objects.filter(Title='job 1 note 1 title')
 		job_note = job_note_query.first()
 
-		admin_note_query = Notes.objects.filter(Title='admin not 1 title')
+		admin_note_query = Notes.objects.filter(Title='admin note 1 title')
 		admin_note = admin_note_query.first()
 
 		self.loginManager()

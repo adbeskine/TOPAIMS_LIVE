@@ -1,5 +1,5 @@
 from selenium import webdriver
-from sensitive import user_passwords
+from sensitive import user_passwords, test_data
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import time
@@ -35,26 +35,26 @@ class FunctionalTest(StaticLiveServerTestCase):
 					raise e
 				time.sleep(0.5)
 
-	def login(self, browser): # <_ keep for backwards compatability with older tests
+	def login(self, browser): # <- keep for backwards compatability with older tests
 		browser.get(self.live_server_url + reverse('login'))
 		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[5])
+		browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
 		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
 
 	def loginSuper(self, browser):
 		browser.get(self.live_server_url + reverse('login'))
 		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[5])
+		browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
 		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
 
 	def loginManager(self, browser):
 		browser.get(self.live_server_url + reverse('login'))
 		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[3])
+		browser.find_element_by_id('passwordbox').send_keys(test_data['manager'])
 		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
 
 	def loginStaff(self, browser):
 		browser.get(self.live_server_url + reverse('login'))
 		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(user_passwords.popitem()[1])
+		browser.find_element_by_id('passwordbox').send_keys(test_data['staff'])
 		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
