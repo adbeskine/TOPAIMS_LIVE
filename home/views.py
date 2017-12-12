@@ -221,8 +221,8 @@ def job(request, job_id): # LOGGEDIN
 	
 	needed_items = []
 	for item in scheduled_items:
-		if item.date_1 - NOW <= timedelta(days=7):
-			needed_items.append(item)
+		# if item.date_1 - NOW <= timedelta(days=7):
+		needed_items.append(item)
 	for item in Shopping_list_items.objects.filter(job=job):
 		needed_items.append(item)
 
