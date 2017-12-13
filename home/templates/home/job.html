@@ -100,11 +100,11 @@
           <div class="card-body">
             <p class="card-text"> {{ SI.description }} X {{ SI.quantity}} | 
               
-              <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#date_form_modal_{{ SI.pk }}" id="schedule_item_{{ SI.pk }}_date">{{ SI.date_1}}</button> 
+              <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#date_form_modal" data-pk="{{ SI.pk }}" data-desc="{{ SI.description }}" data-quantity="{{ SI.quantity }}" data-job="{{ SI.job }}" id="schedule_item_{{ SI.pk }}_date">{{ SI.date_1}}</button> 
 
             {% if SI.date_1 != SI.date_2 %}
 
-            - <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#date_form_modal"> {{ SI.date_2 }} </button> <!-- this button is here just so the styling looks the same -->
+            - <button type="button" class="btn btn-grey"> {{ SI.date_2 }} </button> <!-- this button is here just so the styling looks the same -->
             {% endif %} </p>
           </div>
         {% if SI in needed_items %} 
@@ -179,7 +179,7 @@
                       <p class="card-text"> 
                         {{ NI.description }} X {{ NI.quantity}} | {{ NI.date_1}}{% if date_1 != date_2 %}-{{ NI.date_2 }}{% endif %} 
     
-                        <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal_{{ NI.model }}_{{ NI.pk }}" id="needed_item_{{ NI.model }}_{{ NI.pk }}_PO">PO</button>
+                        <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal" data-pk="{{ NI.pk }}" data-q="{{ NI.quantity }}" data-job="{{ NI.job }}" data-jobid="{{ job.job_id }}" data-model="{{ NI.model }}" data-description="{{ NI.description }}" id="needed_item_{{ NI.model }}_{{ NI.pk }}_PO">PO</button>
     
                       </p>
                 {% endif %}
@@ -309,11 +309,10 @@
 
 <!-- PURCHASE ORDER FORM MODAL -->
 
-    {% for NI in needed_items %}
 
-    <div class="modal fade" id="purchase_order_modal_{{ NI.model }}_{{ NI.pk }}" tabindex="-1" role="dialog" aria-labelledby="purchase_order_modal_Label" aria-hidden="true">
+    <div class="modal fade" id="purchase_order_modal" tabindex="-1" role="dialog" aria-labelledby="purchase_order_modal_Label" aria-hidden="true">
        <div class="modal-dialog" role="document">
-         <div class="modal-content">
+         <div class="modal-content" id="purchase_order_modal_insertfromjshere">
            <div class="modal-header">
              <h5 class="modal-title" id="purchase_order_modal_Label">Purchase Order</h5>
              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -322,7 +321,7 @@
            </div>
            <div class="modal-body">
 
-            <form action="{% url 'purchase_order' job.job_id %}" method="POST" id="PO_form_{{ NI.model }}_{{ NI.pk }}">
+            <form action="null" method="POST" id="null">
               {% csrf_token %}
 
               {{ purchase_order_form.Supplier.label }}
@@ -335,19 +334,19 @@
               <div class="card">
                 <div class="card-block text-justify" id="item1">
                   {{ purchase_order_form.item_1_description.label }}
-                  <input type="{{ purchase_order_form.item_1_description.type }}" name="{{ purchase_order_form.item_1_description.name }}" value="{{ NI.description }}"><br>
+                  <input class="item_1_description" type="{{ purchase_order_form.item_1_description.type }}" name="{{ purchase_order_form.item_1_description.name }}" value="{{ NI.description }}"><br>
                   {{ purchase_order_form.item_1_fullname.label }}
                   {{ purchase_order_form.item_1_fullname }}<br>
                   {{ purchase_order_form.item_1_price.label }}
                   {{ purchase_order_form.item_1_price }}<br>
                   {{ purchase_order_form.item_1_job.label }}
-                  <input type="{{ purchase_order_form.item_1_job.type }}" name="{{ purchase_order_form.item_1_job.name }}" value="{{ NI.job }}"><br>
+                  <input class="item_1_job" type="{{ purchase_order_form.item_1_job.type }}" name="{{ purchase_order_form.item_1_job.name }}" value="{{ NI.job }}"><br>
                   {{ purchase_order_form.item_1_delivery_location.label }}
                   {{ purchase_order_form.item_1_delivery_location }}<br>
                   {{ purchase_order_form.item_1_delivery_date.label }}
                   {{ purchase_order_form.item_1_delivery_date }}<br>
                   {{ purchase_order_form.item_1_quantity.label }}
-                  <input type="{{ purchase_order_form.item_1_quantity.type }}" name="{{ purchase_order_form.item_1_quantity.name }}" value="{{ NI.quantity }}"><br>
+                  <input class="item_1_quantity" type="{{ purchase_order_form.item_1_quantity.type }}" name="{{ purchase_order_form.item_1_quantity.name }}" value="{{ NI.quantity }}"><br>
                 </div>
               </div>
               <div class="card">
@@ -524,16 +523,14 @@
        </div>
      </div>
 
-    {% endfor %}
 
 
 
 
     <!-- modal update item date form -->
       
-      {% for SI in scheduled_items %}
 
-      <div class="modal fade" id="date_form_modal_{{ SI.pk }}" tabindex="-1" role="dialog" aria-labelledby="date_form_modalLabel" aria-hidden="true">
+      <div class="modal fade" id="date_form_modal" tabindex="-1" role="dialog" aria-labelledby="date_form_modalLabel" aria-hidden="true">
        <div class="modal-dialog" role="document">
          <div class="modal-content">
            <div class="modal-header">
@@ -546,46 +543,46 @@
 
                 <ul class="nav nav-tabs" role="tablist">
                   <li class="nav-item">
-                    <a class="nav-link" href="#date_{{ SI.pk }}" role="tab" data-toggle="tab">Date</a>
+                    <a class="nav-link" href="#date" role="tab" data-toggle="tab">Date</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#delete_{{ SI.pk }}" role="tab" data-toggle="tab" id="delete_tab_{{SI.pk}}">Delete</a>
+                    <a class="nav-link" href="#delete" role="tab" data-toggle="tab" id="delete_tab_toggle">Delete</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#shopping_list_form_{{ SI.pk }}" data-toggle="tab" id="shopping_list_form_{{ SI.pk }}_toggle">Add to Shopping List</a>
+                    <a class="nav-link" href="#shopping_list_form" data-toggle="tab" id="shopping_list_form_toggle">Add to Shopping List</a>
                   </li>
                 </ul>
 
                 <div class="tab-content">
 
-                  <div role="tabpanel" class="tab-pane in active" id="date_{{ SI.pk }}">
-                    <form action="{% url 'schedule_item' 'update' SI.pk %}" method="post" id="something">
+                  <div role="tabpanel" class="tab-pane in active" id="date">
+                    <form class="update_date_form" action="null" method="post" id="something">
                       {% csrf_token %}
                       {{ update_date_form}}
                       <input type="Submit" value="Update" id="schedule_item_update_button">
                     </form>
                   </div>
 
-                  <div role="tabpanel" class="tab-pane" id="delete_{{ SI.pk }}">
-                    <form action="{% url 'schedule_item' 'delete' SI.pk %}" method="post">
+                  <div role="tabpanel" class="tab-pane" id="delete">
+                    <form class="delete_form" action="null" method="post">
                       {% csrf_token %}
-                      <input type="Submit" value="Delete '{{SI.description}}'" id="schedule_item_{{ SI.pk }}_delete">
+                      <input class="delete_form_submit" type="Submit" value="null" id="schedule_item_delete">
                     </form>
                   </div>
                 
-                  <div role="tabpanel" class="tab-pane" id="shopping_list_form_{{ SI.pk }}">
+                  <div role="tabpanel" class="tab-pane" id="shopping_list_form">
 
-                    <form action="{% url 'shopping_list_create' 'create' %}" method="post" id="shopping_list_form_{{ SI.pk }}">
+                    <form class="shopping_list_form" action="null" method="post" id="shopping_list_form">
                         
                         {% csrf_token %}
                         {{ new_shopping_list_item_form.description.label }}
-                        <input type="{{ new_shopping_list_item_form.description.type }}" name="{{ new_shopping_list_item_form.description.name }}" value="{{ SI.description }}" id="shopping_list_description_input"><br>
+                        <input class="SL_desc" type="{{ new_shopping_list_item_form.description.type }}" name="{{ new_shopping_list_item_form.description.name }}" value="{{ SI.description }}" id="shopping_list_description_input"><br>
 
                         {{ new_shopping_list_item_form.quantity.label }}
-                        <input type="{{ new_shopping_list_item_form.quantity.type }}" name="{{ new_shopping_list_item_form.quantity.name }}" value="{{ SI.quantity }}" id="shopping_list_quantity_input"><br>
+                        <input class="SL_q" type="{{ new_shopping_list_item_form.quantity.type }}" name="{{ new_shopping_list_item_form.quantity.name }}" value="null" id="shopping_list_quantity_input"><br>
 
                         {{ new_shopping_list_item_form.job.label }}
-                        <input type="{{ new_shopping_list_item_form.job.type }}" name="{{ new_shopping_list_item_form.job.name }}" value="{{ SI.job }}" id="shopping_list_job_input"><br>
+                        <input class="SL_job" type="{{ new_shopping_list_item_form.job.type }}" name="{{ new_shopping_list_item_form.job.name }}" value="null" id="shopping_list_job_input"><br>
                         <input type="Submit" value="add" id="shopping_list_form_submit_button">
                     </form>
 
@@ -595,7 +592,7 @@
 
            </div>
            <div class="modal-footer">
-             <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_modal_{{ SI.pk}}">Cancel</button>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_modal">Cancel</button>
            </div>
          </div>
        </div>
@@ -605,6 +602,5 @@
 
 
 
-     {% endfor %}
 
 {% endblock %}

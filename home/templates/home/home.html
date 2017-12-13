@@ -56,7 +56,7 @@
       									</a>
       								</button>
 
-      								<button type="button" class="btn btn-grey" data-toggle="modal" data-target="#delivery_rejection_modal_{{ item.pk }}" id="reject_delivery_button_{{ item.pk }}">
+      								<button type="button" class="btn btn-grey" data-toggle="modal" data-itempk="{{ item.pk }}" data-target="#delivery_rejection_modal" id="reject_delivery_button_{{ item.pk }}">
       										Reject
       									</a>
       								</button>
@@ -89,7 +89,7 @@
       									</a>
       								</button>
 
-      								<button type="button" class="btn btn-grey" data-toggle="modal" data-target="#delivery_rejection_modal_{{ item.pk }}" id="reject_delivery_button_{{ item.pk }}">
+      								<button type="button" class="btn btn-grey" data-toggle="modal" data-itempk="{{ item.pk }}" data-target="#delivery_rejection_modal" id="reject_delivery_button_{{ item.pk }}">
       										Reject
       									</a>
       								</button>
@@ -121,7 +121,7 @@
       									</a>
       								</button>
 
-      								<button type="button" class="btn btn-grey" data-toggle="modal" data-target="#delivery_rejection_modal_{{ item.pk }}" id="reject_delivery_button_{{ item.pk }}">
+      								<button type="button" class="btn btn-grey" data-toggle="modal" data-itempk="{{ item.pk }}" data-target="#delivery_rejection_modal" id="reject_delivery_button_{{ item.pk }}">
       									Reject
       								</button>
 
@@ -311,15 +311,34 @@
 	</div> <!--whole screen row -->
 </div> <!-- whole screen container -->
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- MODALS -->
 
 <!-- ITEM REJECTION -->
 
-{% for item in this_week_delivery_items %}
 
-	<div class="modal fade" id="delivery_rejection_modal_{{ item.pk }}" tabindex="-1" role="dialog" aria-labelledby="reject_delivery_modal_Label" aria-hidden="true">
+	<div class="modal fade" id="delivery_rejection_modal" tabindex="-1" role="dialog" aria-labelledby="reject_delivery_modal_Label" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<div class="modal-content">
+			<div class="modal-content" id="delivery_rejection_modal_pk">
 				<div class="modal-header">
 					<h5 class="modal-title" id="reject_delivery_modal_Label">Reject Delivery</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -328,7 +347,7 @@
         </div>
         <div class="modal-body">
 
-        	<form action="{% url 'reject_delivery' item.pk %}" method="POST" id="delivery_rejection_form">
+        	<form action='null' method="POST" id="delivery_rejection_form">
         		{% csrf_token %}
         		{{ reject_delivery_form}}
         		<input type="Submit" value="Submit" id="reject_delivery_form_submit">
@@ -341,67 +360,6 @@
       </div>
     </div>
   </div>
-
- {% endfor %}
-
-{% for item in today_delivery_items %}
-
-	<div class="modal fade" id="delivery_rejection_modal_{{ item.pk }}" tabindex="-1" role="dialog" aria-labelledby="reject_delivery_modal_Label" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="reject_delivery_modal_Label">Reject Delivery</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-           </button>
-        </div>
-        <div class="modal-body">
-
-        	<form action="{% url 'reject_delivery' item.pk %}" method="POST" id="delivery_rejection_form">
-        		{% csrf_token %}
-        		{{ reject_delivery_form}}
-        		<input type="Submit" value="Submit" id="reject_delivery_form_submit">
-        	</form>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_modal_{{ SI.pk}}">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
- {% endfor %}
-
-{% for item in all_delivery_items %}
-
-	<div class="modal fade" id="delivery_rejection_modal_{{ item.pk }}" tabindex="-1" role="dialog" aria-labelledby="reject_delivery_modal_Label" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="reject_delivery_modal_Label">Reject Delivery</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-           </button>
-        </div>
-        <div class="modal-body">
-
-        	<form action="{% url 'reject_delivery' item.pk %}" method="POST" id="delivery_rejection_form">
-        		{% csrf_token %}
-        		{{ reject_delivery_form}}
-        		<input type="Submit" value="Submit" id="reject_delivery_form_submit">
-        	</form>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_modal_{{ SI.pk}}">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
- {% endfor %}
 
 
 {% endblock %}
-
