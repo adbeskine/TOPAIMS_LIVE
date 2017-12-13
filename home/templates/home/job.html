@@ -92,7 +92,7 @@
 
         {% for SI in scheduled_items %}
           {% if SI in needed_items %} 
-            <div class="card border-black text-center bg-success" id="schedule_item_{{ SI.pk }}">
+            <div class="card border-black text-center bg-warning" id="schedule_item_{{ SI.pk }}">
           {% endif %}
           {% if SI not in needed_items %}
             <div class="card border-black text-center " id="schedule_item_{{ SI.pk }}">
@@ -105,14 +105,18 @@
             {% if SI.date_1 != SI.date_2 %}
 
             - <button type="button" class="btn btn-grey"> {{ SI.date_2 }} </button> <!-- this button is here just so the styling looks the same -->
-            {% endif %} </p>
+            {% endif %} 
+
+            <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal" data-pk="{{ SI.pk }}" data-q="{{ SI.quantity }}" data-job="{{ SI.job }}" data-jobid="{{ job.job_id }}" data-model="{{ SI.model }}" data-description="{{ SI.description }}" id="needed_item_{{ SI.model }}_{{ SI.pk }}_PO">PO</button>
+
+            </p>
           </div>
-        {% if SI in needed_items %} 
+        {% if SI in needed_items %} <!-- DO NOT DELETE YET  -->
         </div>
-        {% endif %}
-        {% if SI not in needed_items %}
+        {% endif %} <!-- DO NOT DELETE YET -->
+        {% if SI not in needed_items %} <!-- DO NOT DELETE YET  -->
         </div>
-        {% endif %}
+        {% endif %}<!-- DO NOT DELETE YET -->
 
         {% endfor %}
 
@@ -150,9 +154,11 @@
         <!-- TABLIST -->
 
         <ul class="nav nav-tabs" role="tablist">
+          <!-- UPDATE TESTS FOR THIS ABSENCE
           <li class="nav-item">
             <a class="nav-link" href="#needed_panel" role="tab" data-toggle="tab" id="needed_panel_toggle">Upcoming Scheduled Items</a>
           </li>
+          -->
           <li class="nav-item">
             <a class="nav-link" href="#en_route_panel" role="tab" data-toggle="tab" id="en_route_panel_toggle">En-route</a>
           </li>
@@ -166,7 +172,9 @@
 
         <div class="tab-content">
 
-          <!-- NEEDED ITEMS  -->
+          <!-- UPDATE TESTS FOR THIS ABSENCE
+
+          <- NEEDED ITEMS  
 
           <div role="tabpanel" class="tab-pane in active" id="needed_panel">
 
@@ -174,7 +182,7 @@
             <div class="card border-black text-center" id="needed_item_{{ NI.model}}_{{ NI.pk }}">
               <div class="card-body">
     
-                <!-- schedule items-->
+                <- schedule items->
                 {% if NI.model == "Scheduled_items" %}
                       <p class="card-text"> 
                         {{ NI.description }} X {{ NI.quantity}} | {{ NI.date_1}}{% if date_1 != date_2 %}-{{ NI.date_2 }}{% endif %} 
@@ -184,7 +192,6 @@
                       </p>
                 {% endif %}
 
-                <!-- TODO shopping list items TODO -->
                 {% if NI.model == "Shopping_list_items" %}
                   <p class="card-text">
                     {{ NI.description }} X {{ NI.quantity }}
@@ -196,10 +203,11 @@
             {% endfor %}
           </div>
 
+          -->
 
           <!-- EN-ROUTE -->
 
-          <div role="tabpanel" class="tab-pane" id="en_route_panel">
+          <div role="tabpanel" class="tab-pane in active" id="en_route_panel">
             {% for item in en_route_items %}
             
             <div class="card border-black text-center" id="en_route_item_{{ item.pk }}">
