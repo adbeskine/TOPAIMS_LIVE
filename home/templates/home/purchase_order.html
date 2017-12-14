@@ -14,7 +14,7 @@
 
 			<div class="card-header">
         <h4 id="purchase_order_view_title"> Purchase Order No: {{ purchase_order_no }} </h4> <br>
-        <h5>supplier: {{ purchase_order.supplier }} | supplier ref: {{ purchase_order.supplier_ref}}</h5>
+        <h5>supplier: {{ purchase_order.supplier }} |<button type="button" class="btn btn-grey" data-toggle="modal" data-target="#new_supplier_ref_modal"> supplier ref: {{ purchase_order.supplier_ref}}</button></h5>
       </div>
 
       <div class="card-body">
@@ -53,14 +53,44 @@
   </div>
 </div>
 
+
+  <!-- new supplier ref modal -->
+
+  <div class="modal fade" id="new_supplier_ref_modal" tabindex="-1" role="dialog" aria-labelledby="new_supplier_ref_modal_Label" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h5 class="modal-title" id="new_supplier_ref_modal_Label">New Supplier Ref</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+            <form action="{% url 'update_PO_supplier_ref' purchase_order.pk %}" method="POST">
+              {% csrf_token %}
+
+              {{ update_PO_supplier_ref_form }}
+
+              <input type="Submit" value="Update">
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     {% endblock %}
 
-{{ item.description }}
-{{ item.fullname }}
-{{ item.delivery_location }}
-{{ item.price }}
-{{ item.status }}
-{{ item.order_date}}
-{{ item.delivery_date }}
-{{ item.quantity }}
-{{ item.job }}

@@ -7,7 +7,7 @@ from sensitive import WEBSITE_PASSWORD as password
 from sensitive import user_passwords
 from .models import Site_info, Jobs, Notes, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import os, random, string, re
-from home.forms import delete_job_form, new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form
+from home.forms import delete_job_form, new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form, update_PO_supplier_ref_form
 import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -346,7 +346,8 @@ def purchase_orders(request, order_no=None):
 		context = {
 			'purchase_order':purchase_order,
 			'item_list':item_list,
-			'purchase_order_no':purchase_order_no
+			'purchase_order_no':purchase_order_no,
+			'update_PO_supplier_ref_form':update_PO_supplier_ref_form
 		}
 
 		if check_permissions(request, 2) == True:
@@ -592,6 +593,28 @@ def purchase_order(request, job_id=None): #SNAGGING, CONDITIONAL VALIDATION
 
 # -- update items --#
 
+def update_PO_supplier_ref(request, pk):
+
+	if request.method == 'POST':
+
+		if check_permissions(request, 3) == True:
+			pass
+		else:
+			return check_permissions(request, 3)
+
+	form = update_PO_supplier_ref_form(request.POST)
+
+	if form.is_valid():
+		PO = Purchase_orders.objects.filter(pk=pk).first()
+		new_ref = form.cleaned_data['new_supplier_ref']
+		PO.supplier_ref = new_ref
+		PO.save()
+
+		return redirect(reverse('purchase_orders', kwargs={'order_no':PO.order_no}))
+
+
+
+
 def acquired(request, pk):
 	if request.session['logged_in'] == True:
 		shopping_list_item = Shopping_list_items.objects.filter(pk=pk).first()
@@ -762,7 +785,7 @@ def delete(request, model=None, pk=None):
 
 			return redirect(previous_page)
 
-#--------------------------------delete job page-------------------------------------------------#
+	#--------------------------------delete job page-------------------------------------------------#
 		elif model==None and pk==None:
 
 			context = {

@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import homepage, login, unlock, new_job, jobs, job, new_note, update_job, new_schedule_item, schedule_item, purchase_order, shopping_list, acquired, mark_on_site, mark_showroom, reject_delivery, purchase_order, purchase_orders, delete
+from .views import homepage, login, unlock, new_job, jobs, job, new_note, update_job, new_schedule_item, schedule_item, purchase_order, shopping_list, acquired, mark_on_site, mark_showroom, reject_delivery, purchase_order, purchase_orders, delete, update_PO_supplier_ref
 
 urlpatterns = [
     url(r'^$', homepage, name='homepage'),
@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^purchase_orders/(?P<order_no>.+?)/$', purchase_orders, name='purchase_orders'),
     url(r'^delete/(?P<model>.+?)/(?P<pk>.+?)/$', delete, name='delete'),
     url(r'^delete/$', delete, name='delete_job'),
+    url(r'^update_po_s_ref/(?P<pk>.+?)/$', update_PO_supplier_ref, name='update_PO_supplier_ref'),
 ]
 
 

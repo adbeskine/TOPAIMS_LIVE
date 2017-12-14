@@ -127,3 +127,7 @@ class delete_job_form(forms.Form):
 	job_deletion_selection = forms.ModelChoiceField(queryset=Jobs.objects.all(), to_field_name="address", widget = forms.Select(attrs={'id':'delete_job_choice_input'}))
 	security_field_1 = forms.CharField(widget = forms.TextInput(attrs={'id':'security_field_1'}))
 	security_field_2 = forms.CharField(widget = forms.TextInput(attrs={'id':'security_field_2'}))
+
+class update_PO_supplier_ref_form(forms.Form):
+	new_supplier_ref = forms.CharField()
+
