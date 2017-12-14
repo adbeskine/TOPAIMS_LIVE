@@ -290,8 +290,8 @@
         <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
           <form action="{% url 'purchase_order_homepage' %}" id="blank_PO_form" method="POST">
             {% csrf_token %}
-              <div class="card">
-                <div class="card-block mb-2" id="supplier details">
+              <div class="card mb-3 border-danger">
+                <div class="card-block" id="supplier details">
                   {{ purchase_order_form.Supplier.label }}<br>
                   {{ purchase_order_form.Supplier }} <br>
                   {{ purchase_order_form.Supplier_ref.label }}<br>
@@ -300,7 +300,7 @@
                   {{ purchase_order_form.order_no }} <br>
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item1">
                   {{ purchase_order_form.item_1_description.label }}<br>
                   {{ purchase_order_form.item_1_description }}<br>
@@ -318,7 +318,7 @@
                   {{ purchase_order_form.item_1_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item2">
                   {{ purchase_order_form.item_2_description.label }}<br>
                   {{ purchase_order_form.item_2_description }}<br>
@@ -336,7 +336,7 @@
                   {{ purchase_order_form.item_2_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item3">
                   {{ purchase_order_form.item_3_description.label }}<br>
                   {{ purchase_order_form.item_3_description }}<br>
@@ -354,7 +354,7 @@
                   {{ purchase_order_form.item_3_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item4">
                   {{ purchase_order_form.item_4_description.label }}<br>
                   {{ purchase_order_form.item_4_description }}<br>
@@ -372,7 +372,7 @@
                   {{ purchase_order_form.item_4_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item5">
                   {{ purchase_order_form.item_5_description.label }}<br>
                   {{ purchase_order_form.item_5_description }}<br>
@@ -390,7 +390,7 @@
                   {{ purchase_order_form.item_5_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item6">
                   {{ purchase_order_form.item_6_description.label }}<br>
                   {{ purchase_order_form.item_6_description }}<br>
@@ -408,7 +408,7 @@
                   {{ purchase_order_form.item_6_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item7">
                   {{ purchase_order_form.item_7_description.label }}<br>
                   {{ purchase_order_form.item_7_description }}<br>
@@ -426,7 +426,7 @@
                   {{ purchase_order_form.item_7_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item8">
                   {{ purchase_order_form.item_8_description.label }}<br>
                   {{ purchase_order_form.item_8_description }}<br>
@@ -444,7 +444,7 @@
                   {{ purchase_order_form.item_8_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item9">
                   {{ purchase_order_form.item_9_description.label }}<br>
                   {{ purchase_order_form.item_9_description }}<br>
@@ -462,7 +462,7 @@
                   {{ purchase_order_form.item_9_quantity }}
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-2 border-danger">
                 <div class="card-block" id="item10">
                   {{ purchase_order_form.item_10_description.label }}<br>
                   {{ purchase_order_form.item_10_description }}<br>
