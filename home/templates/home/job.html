@@ -210,11 +210,11 @@
 
           <!-- EN-ROUTE -->
 
-          <div role="tabpanel" class="tab-pane in active" id="en_route_panel">
+          <div role="tabpanel" class="tab-pane in active" id="en_route_panel"  style="max-height: 80vh; overflow-y: scroll;">
             {% for item in en_route_items %}
             
             <div class="card border-black text-center" id="en_route_item_{{ item.pk }}">
-              <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
+              <div class="card-body">
                 <p class="card-text">
                   {% if item.PO %}
                     <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
@@ -237,11 +237,11 @@
 
         <!-- ON-SITE -->
 
-        <div role="tabpanel" class="tab-pane" id="on_site_panel">
+        <div role="tabpanel" class="tab-pane" id="on_site_panel" style="max-height: 80vh; overflow-y: scroll;">
           {% for item in on_site_items %}
 
           <div class="card border-black text-center" id="on_site_item_{{ item.pk }}">
-            <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
+            <div class="card-body">
               <p class="card-text">
                 {% if item.PO %}
                   <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
@@ -261,7 +261,7 @@
 
         <div role="tabpanel" class="tab-pane" id="PO_panel">
           <div class="card border-black text-center">
-            <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
+            <div class="card-body"  style="max-height: 80vh; overflow-y: scroll;">
               <form action="{% url 'purchase_order' job.job_id %}" id="blank_PO_form" method="POST">
                 {% csrf_token %}
                 {% for field in purchase_order_form %}
