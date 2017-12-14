@@ -49,7 +49,7 @@ class Items(models.Model):
 	description = models.CharField(max_length=100, default='')
 	fullname = models.CharField(max_length=100, default='')
 	delivery_location = models.CharField(max_length=100, default='')
-	price = models.IntegerField(default=1)
+	price = models.DecimalField(default=1.00, decimal_places=2, max_digits=25)
 	status = models.CharField(max_length=100, default='')
 	order_date = models.CharField(max_length=100, default='')
 	delivery_date = models.CharField(max_length=100, default='') #

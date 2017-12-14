@@ -63,6 +63,7 @@ def convert_to_date(str_date, form='%Y-%m-%d'):
 def homepage(request):  #LOGGEDIN
 
 	NOW = settings.NOW
+	next_PO_number = Purchase_orders.objects.latest('pk').pk + 4001
 
 
 	all_delivery_items = []
@@ -105,6 +106,7 @@ def homepage(request):  #LOGGEDIN
 	'new_note_form':new_note_form,
 
 	'purchase_order_form':purchase_order_form,
+	'next_PO_number':next_PO_number,
 	}
 
 
@@ -231,6 +233,7 @@ def job(request, job_id): # LOGGEDIN
 	NOW = settings.NOW
 
 	job = Jobs.objects.filter(job_id=job_id).first()
+	next_PO_number = Purchase_orders.objects.latest('pk').pk + 4001
 
 	#-- NOTES --#
 	notes = Notes.objects.filter(job=job).order_by('-Timestamp')
@@ -274,6 +277,7 @@ def job(request, job_id): # LOGGEDIN
 
 
 		'now':NOW,
+		'next_PO_number': next_PO_number,
 
 		'new_note_form':new_note_form,
 		'new_scheduled_item_form':new_scheduled_item_form,
