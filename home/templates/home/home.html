@@ -39,7 +39,7 @@
 
       			<!-- TODAY DELIVERIES -->
 
-      			<div role="tabpanel" class="tab-pane in active" id="today_deliveries_panel">
+      			<div role="tabpanel" class="tab-pane in active" id="today_deliveries_panel" style="max-height: 80vh; overflow-y: scroll;">
       				{% for item in today_delivery_items %}
       					<div class="card border-primary text-center" id="today_delivery_item_{{item.pk}}">
       						<div class="card-body">
@@ -70,7 +70,7 @@
 
       			<!-- THIS WEEK DELIVERIES -->
 
-      			<div role="tabpanel" class="tab-pane" id="this_week_deliveries_panel">
+      			<div role="tabpanel" class="tab-pane" id="this_week_deliveries_panel" style="max-height: 80vh; overflow-y: scroll;">
 
       				{% for item in this_week_delivery_items %}
       					<div class="card border-primary text-center" id="this_week_delivery_item_{{item.pk}}">
@@ -103,7 +103,7 @@
 
       			<!-- ALL DEVLIVERIES -->
 
-      			<div role="tabpanel" class="tab-pane" id="all_deliveries_panel">
+      			<div role="tabpanel" class="tab-pane" id="all_deliveries_panel" style="max-height: 80vh; overflow-y: scroll;">
 
       				{% for item in all_delivery_items %}
       					<div class="card border-primary text-center" id="all_delivery_item_{{item.pk}}">
@@ -154,7 +154,7 @@
         	<h3>SHOPPING LIST</h3>
       	</div>
 
-    		<div class="card-body">
+    		<div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
 		
     		{% for item in shopping_list_items %}
       		<div class="card border-black text-center" id="{{ item.model }}_{{ item.pk}}">
@@ -210,7 +210,7 @@
 
           	<!-- ADMIN NOTES -->
 
-          	<div role="tabpanel" class="tab-pane in active" id="admin_notes_panel">
+          	<div role="tabpanel" class="tab-pane in active" id="admin_notes_panel" style="max-height: 80vh; overflow-y: scroll;">
 
  							{% for note in admin_notes %}
 
@@ -232,7 +232,7 @@
 
     				<!-- JOB NOTES -->
 
-    				<div role="tabpanel" class="tab-pane" id="all_notes_panel">
+    				<div role="tabpanel" class="tab-pane" id="all_notes_panel" style="max-height: 80vh; overflow-y: scroll;">
  							{% for note in job_notes %}
 
     						<div class="card border-black text-center mb-2" id="Note_{{ note.pk }}">
@@ -287,7 +287,7 @@
         	<h3>PURCHASE ORDER</h3>
       	</div>
           
-        <div class="card-body">
+        <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
           <form action="{% url 'purchase_order_homepage' %}" id="blank_PO_form" method="POST">
             {% csrf_token %}
             {% for field in purchase_order_form %}

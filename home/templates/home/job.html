@@ -44,10 +44,10 @@
     	<div class="card-header">
     		<h3>NOTES</h3>
     	</div>
-    	<div class="card-body">
+    	<div class="card-body" style="max-height: 50vh; overflow-y: scroll;">
 
     		{% for note in notes %}
-    		<div class="card border-black text-center mb-3" id="Note_{{ note.pk }}">
+    		<div class="card border-black text-center mb-1" id="Note_{{ note.pk }}">
     			<div class="card-header">
     				{{ note.Title }}
     			</div>
@@ -59,7 +59,8 @@
           </div>
     		</div>
     		{% endfor %}
-
+      </div>
+      <div class="card-footer">
     		<!-- New note form -->
     		<div class="card border-black text-center">
     			<div class="card-header">
@@ -88,7 +89,8 @@
       <div class="card-header">
         <h3>SCHEDULE OF ITEMS</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
+
 
         {% for SI in scheduled_items %}
           {% if SI in needed_items %} 
@@ -119,7 +121,8 @@
         {% endif %}<!-- DO NOT DELETE YET -->
 
         {% endfor %}
-
+      </div>
+        <div class="card-footer">
         <!-- New item form -->
         <div class="card border-black text-center">
           <div class="card-header">
@@ -211,7 +214,7 @@
             {% for item in en_route_items %}
             
             <div class="card border-black text-center" id="en_route_item_{{ item.pk }}">
-              <div class="card-body">
+              <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
                 <p class="card-text">
                   {% if item.PO %}
                     <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
@@ -238,7 +241,7 @@
           {% for item in on_site_items %}
 
           <div class="card border-black text-center" id="on_site_item_{{ item.pk }}">
-            <div class="card-body">
+            <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
               <p class="card-text">
                 {% if item.PO %}
                   <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
@@ -258,7 +261,7 @@
 
         <div role="tabpanel" class="tab-pane" id="PO_panel">
           <div class="card border-black text-center">
-            <div class="card-body">
+            <div class="card-body" style="max-height: 80vh; overflow-y: scroll;">
               <form action="{% url 'purchase_order' job.job_id %}" id="blank_PO_form" method="POST">
                 {% csrf_token %}
                 {% for field in purchase_order_form %}
