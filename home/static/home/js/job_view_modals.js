@@ -2,7 +2,7 @@ $('#purchase_order_modal').on('show.bs.modal', function(event) {
 
 	var button = $(event.relatedTarget)
 	var pk = button.data('pk')
-	var quantity = button.data('q')
+	var quantity = button.data('quantity')
 	var job = button.data('job')
 	var jobid =  button.data('jobid')
 	var model = button.data('model')
@@ -15,7 +15,7 @@ $('#purchase_order_modal').on('show.bs.modal', function(event) {
 
 	modal.find('.item_1_description').attr("value", description)
 	modal.find('.item_1_job').attr("value", job)
-	modal.find('.item_1_quantity').attr("quantity")
+	modal.find('.item_1_quantity').attr("value", quantity)
 
 })
 

@@ -12,6 +12,7 @@
 
     	<div class="card-header">
     		<div class="container">
+        {% if perm_level >= 2 %}
     		<ul class="nav">
     		  <li class="nav-item dropdown">
     		  	<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="status_menu_toggle">Status</a>
@@ -22,6 +23,7 @@
     		      </div>
     		  </li>
     		</ul>
+        {% endif %}
     	  </div>
     	</div>
 
@@ -38,7 +40,7 @@
 
 
     <!-- NOTES -->
-
+    {% if perm_level >= 2 %}
     <div class="card border-primary text-center mb-5" id="notes_panel">
 
     	<div class="card-header">
@@ -76,6 +78,7 @@
     		</div>
     	</div>
     </div>
+    {% endif %}
 
   </div>
 
@@ -83,7 +86,7 @@
   <div class="col">
     <!-- SCHEDULE OF ITEMS -->
 
-
+    {% if perm_level >= 2 %}
     <div class="card border-primary text-center mb-5" id="schedule_of_items_panel">
 
       <div class="card-header">
@@ -109,7 +112,7 @@
             - <button type="button" class="btn btn-grey"> {{ SI.date_2 }} </button> <!-- this button is here just so the styling looks the same -->
             {% endif %} 
 
-            <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal" data-pk="{{ SI.pk }}" data-q="{{ SI.quantity }}" data-job="{{ SI.job }}" data-jobid="{{ job.job_id }}" data-model="{{ SI.model }}" data-description="{{ SI.description }}" id="needed_item_{{ SI.model }}_{{ SI.pk }}_PO">PO</button>
+            <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal" data-pk="{{ SI.pk }}" data-quantity="{{ SI.quantity }}" data-job="{{ SI.job }}" data-jobid="{{ job.job_id }}" data-model="{{ SI.model }}" data-description="{{ SI.description }}" id="needed_item_{{ SI.model }}_{{ SI.pk }}_PO">PO</button>
 
             </p>
           </div>
@@ -138,6 +141,8 @@
         </div>
       </div>
     </div>
+    {% endif %}
+
   </div>
 
 
@@ -157,56 +162,20 @@
         <!-- TABLIST -->
 
         <ul class="nav nav-tabs" role="tablist">
-          <!-- UPDATE TESTS FOR THIS ABSENCE
-          <li class="nav-item">
-            <a class="nav-link" href="#needed_panel" role="tab" data-toggle="tab" id="needed_panel_toggle">Upcoming Scheduled Items</a>
-          </li>
-          -->
           <li class="nav-item">
             <a class="nav-link" href="#en_route_panel" role="tab" data-toggle="tab" id="en_route_panel_toggle">En-route</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#on_site_panel" role="tab" data-toggle="tab" id="on_site_panel_toggle">On-Site</a>
           </li>
+          {% if perm_level >= 2 %}
           <li class="nav-item">
             <a class="nav-link" href="#PO_panel" role="tab" data-toggle="tab" id="PO_panel_toggle">P.O - {{ next_PO_number }}</a>
           </li>
+          {% endif %}
         </ul>
 
         <div class="tab-content">
-
-          <!-- UPDATE TESTS FOR THIS ABSENCE
-
-          <- NEEDED ITEMS  
-
-          <div role="tabpanel" class="tab-pane in active" id="needed_panel">
-
-            {% for NI in needed_items %}
-            <div class="card border-black text-center" id="needed_item_{{ NI.model}}_{{ NI.pk }}">
-              <div class="card-body">
-    
-                <- schedule items->
-                {% if NI.model == "Scheduled_items" %}
-                      <p class="card-text"> 
-                        {{ NI.description }} X {{ NI.quantity}} | {{ NI.date_1}}{% if date_1 != date_2 %}-{{ NI.date_2 }}{% endif %} 
-    
-                        <button type="button" class="btn btn-grey" data-toggle="modal" data-target="#purchase_order_modal" data-pk="{{ NI.pk }}" data-q="{{ NI.quantity }}" data-job="{{ NI.job }}" data-jobid="{{ job.job_id }}" data-model="{{ NI.model }}" data-description="{{ NI.description }}" id="needed_item_{{ NI.model }}_{{ NI.pk }}_PO">PO</button>
-    
-                      </p>
-                {% endif %}
-
-                {% if NI.model == "Shopping_list_items" %}
-                  <p class="card-text">
-                    {{ NI.description }} X {{ NI.quantity }}
-                  </p>
-                {% endif %}
-
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-
-          -->
 
           <!-- EN-ROUTE -->
 
@@ -259,6 +228,7 @@
 
         <!-- BLANK PURCHASE ORDER FORM -->
 
+        {% if perm_level >= 2 %}
         <div role="tabpanel" class="tab-pane" id="PO_panel">
           <div class="card border-black text-center">
             <div class="card-body"  style="max-height: 80vh; overflow-y: scroll;">
@@ -460,6 +430,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
 
       </div> <!-- tab content -->
       </div>  <!-- site management card body -->
@@ -544,7 +515,7 @@
                   {{ purchase_order_form.item_1_delivery_date.label }}
                   {{ purchase_order_form.item_1_delivery_date }}<br>
                   {{ purchase_order_form.item_1_quantity.label }}
-                  <input class="item_1_quantity" type="{{ purchase_order_form.item_1_quantity.type }}" name="{{ purchase_order_form.item_1_quantity.name }}" value="{{ NI.quantity }}"><br>
+                  <input id="item_1_quantity_input" class="item_1_quantity" type="{{ purchase_order_form.item_1_quantity.type }}" name="{{ purchase_order_form.item_1_quantity.name }}" value="{{ NI.quantity }}"><br>
                 </div>
               </div>
               <div class="card">
@@ -709,7 +680,7 @@
                   {{ purchase_order_form.item_10_quantity }}
                 </div>
               </div>
-              <input type="Submit" value="Create" id="{{ NI.model }}_{{ NI.pk }}_create_PO">
+              <input type="Submit" value="Create" id="create_PO">
 
             </form>
 

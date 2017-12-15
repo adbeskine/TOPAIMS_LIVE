@@ -3,7 +3,7 @@ import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from sensitive import WEBSITE_PASSWORD as password
+from sensitive import test_data
 from django.test import tag
 from django.urls import reverse
 from home.models import Site_info
@@ -13,23 +13,23 @@ class LoginTest(FunctionalTest):
 
 	#-- HELPER METHODS --#
 
-	def correct_login(self, browser): 
+	def correct_login(self): 
 		# to be used on the login screen
-		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(password)
-		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)	
+		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
+		self.browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
+		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)	
 
-	def incorrect_login(self, browser):
+	def incorrect_login(self):
 		# to be used on the login screen
-		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys('incorrect password')
-		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
+		self.browser.find_element_by_id('passwordbox').send_keys('incorrect password')
+		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
 
-	def trigger_lockdown(self, browser):
+	def trigger_lockdown(self):
 		# to be used on the login screen
 		a = 6
 		while a > 0:
-			self.incorrect_login(browser)
+			self.incorrect_login()
 			a -= 1
 
 
@@ -44,14 +44,16 @@ class LoginTest(FunctionalTest):
 
 
 	@tag('correct_password')
-	def test_succesfull_login_redirects_to_home_page(self):
+	def test_successfull_login_redirects_to_home_page(self):
 		# Yousif navigates to the home page in his browser and is redirected to the loginpage
 		self.browser.get(self.live_server_url)
 		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox')) # REFRACT - assert the url not html, this line repeats in the login method
+		self.browser.refresh()
 
-		self.correct_login(self.browser)
+		self.correct_login()
 
 		self.wait_for(lambda: self.assertEquals(self.browser.title, 'TopMarks - Home'))
+		self.browser.refresh()
 
 	@tag('incorrect_password_counter')
 	def test_incorrect_password_gives_correct_error(self):
@@ -59,14 +61,14 @@ class LoginTest(FunctionalTest):
 		self.setUp()
 		# Yousif navigates to the home page and inputs the incorrect password
 		self.browser.get(self.live_server_url)
-		self.incorrect_login(self.browser)
+		self.incorrect_login()
 
 		# The page re-renders and Yousif finds an alert saying 'Incorrect password, 5 attempts remaining'	
 		self.wait_for(lambda: self.assertIn('Incorrect password, 5 attempts remaining', self.browser.page_source))
 		# Yousif puts the incorrect password again 4 more times and each time finds the error message incrementally reducing his remaining attempts by 1 each time until it says 1 attempts remaining
 		a = 4
 		while a >= 1:
-			self.incorrect_login(self.browser)
+			self.incorrect_login()
 			self.wait_for(lambda: self.assertIn(f'Incorrect password, {a} attempts remaining', self.browser.page_source))
 			a -= 1
 
@@ -75,7 +77,7 @@ class LoginTest(FunctionalTest):
 	def test_fifth_incorrect_password_locks_down_site(self):
 		# Yousif navigates to the home page and inputs five incorrect passwords in a row
 		self.browser.get(self.live_server_url)
-		self.trigger_lockdown(self.browser)
+		self.trigger_lockdown()
 
 		# Yousif sees an alert saying 'WEBSITE IS LOCKED' and notices that the passwordbox no longer appears
 		self.wait_for(lambda: self.assertIn('WEBSITE IS LOCKED', self.browser.page_source))
@@ -85,19 +87,20 @@ class LoginTest(FunctionalTest):
 	def test_unlock_link_unlocks_site(self):
 		# Yousif has locked the website by mistake from his browser
 		self.browser.get(self.live_server_url)
-		self.trigger_lockdown(self.browser)
+		self.trigger_lockdown()
 
 		# After checking his email Yousif follows the unlock link to unlock the website
 		unlock_link = self.live_server_url + '/unlock/' + Site_info.objects.first().password
 		self.browser.get(unlock_link)
 
 		# Perversely, Yousif types the wrong password again, however like normal it says '5 attempts remaining' 
-		self.incorrect_login(self.browser)
+		self.incorrect_login()
 		self.wait_for(lambda: self.assertIn('Incorrect password, 5 attempts remaining', self.browser.page_source))
 
 		# Yousif finally types the correct password and gets logged in
-		self.correct_login(self.browser)
+		self.correct_login()
 		self.wait_for(lambda: self.assertEquals(self.browser.title, 'TopMarks - Home'))
+		self.browser.refresh()
 
 
 

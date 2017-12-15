@@ -28,7 +28,11 @@ def check_permissions(request, minimum_level):
 	if request.META['SERVER_NAME'] == 'testserver':  # this is what happens in the unit tests. The redirect is tested in the FTs
 		previous_page = reverse('homepage')
 	else:
-		previous_page = request.META['HTTP_REFERER'] # does not exist when unit testing
+		try:
+			previous_page = request.META['HTTP_REFERER'] # does not exist when unit testing
+		except KeyError:
+			previous_page = reverse('homepage')
+
 	if request.session['perm_level'] >= minimum_level:
 		perm_level = request.session['perm_level']
 		return True
@@ -63,7 +67,8 @@ def convert_to_date(str_date, form='%Y-%m-%d'):
 def homepage(request):  #LOGGEDIN
 
 	NOW = settings.NOW
-	next_PO_number = Purchase_orders.objects.latest('pk').pk + 4001
+	
+	next_PO_number = Purchase_orders.objects.count() + 4001
 
 
 	all_delivery_items = []
@@ -208,6 +213,8 @@ def new_job(request): # LOGGEDIN, ADMIN
 
 def jobs(request): # LOGGEDIN
 
+	perm_level = request.session['perm_level']
+
 	ongoing_jobs = []
 	for job in Jobs.objects.filter(status='ongoing'):
 		ongoing_jobs.append(job)
@@ -224,6 +231,7 @@ def jobs(request): # LOGGEDIN
 	'ongoing_jobs':ongoing_jobs,
 	'completed_jobs':completed_jobs,
 	'quote_jobs':quote_jobs,
+	'perm_level':perm_level,
 	}
 
 	return check_and_render(request, 'home/jobs.html', context)
@@ -231,9 +239,12 @@ def jobs(request): # LOGGEDIN
 def job(request, job_id): # LOGGEDIN
 	
 	NOW = settings.NOW
-
+	perm_level = request.session['perm_level']
 	job = Jobs.objects.filter(job_id=job_id).first()
-	next_PO_number = Purchase_orders.objects.latest('pk').pk + 4001
+	
+
+	next_PO_number = Purchase_orders.objects.count() + 4001
+
 
 	#-- NOTES --#
 	notes = Notes.objects.filter(job=job).order_by('-Timestamp')
@@ -278,6 +289,7 @@ def job(request, job_id): # LOGGEDIN
 
 		'now':NOW,
 		'next_PO_number': next_PO_number,
+		'perm_level':perm_level,
 
 		'new_note_form':new_note_form,
 		'new_scheduled_item_form':new_scheduled_item_form,
@@ -840,60 +852,3 @@ def delete(request, model=None, pk=None):
 
 	return redirect(reverse('homepage')) # this is the redirect for all the non-job object deletions
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def login(request): #
-	# site = Site_info.objects.first()
-# 
-	# if site.locked == True:
-		# return render(request, 'home/locked.html')
-	# else:
-		# pass
-# 	
-	# if request.method == 'POST':
-# 		
-		# if site.locked == True: # make sure the website isn't locked (for POST data not through website form) POST_MVP: proper django form, check for csrf token instead
-			# return redirect(reverse('login'))
-		# elif site.locked == False:
-			# pass
-# 		
-		# if request.POST.get("password") == password:
-			# request.session['logged_in'] = True
-			# return redirect(reverse('homepage'))
-# 		
-		# else:
-			# try:
-				# request.session['incorrect_password_attempts'] += 1
-			# except KeyError:
-				# request.session['incorrect_password_attempts'] = 0
-# 
-# 
-			# if request.session['incorrect_password_attempts'] < 5: 
-				# attempts_remaining = (5 - request.session['incorrect_password_attempts'])
-				# return render(request, 'home/login.html', {'password_alert': attempts_remaining}) #  # 
-# 
-			# elif request.session['incorrect_password_attempts'] >= 4: # LOCKS THE SITE just in case someone uses creative post requests everything is >= and not ==
-				# request.session['incorrect_password_attempts'] += 1
-# 				
-				# Site_info.objects.filter(pk=1).update(locked=True, password=generate_password())				
-				# return redirect(reverse('login')) # increment the attempts up to five then lock the site
-# 
-# 	
-	# return render(request, 'home/login.html')

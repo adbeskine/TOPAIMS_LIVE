@@ -33,7 +33,7 @@ class ShoppingListPageTest(FunctionalTest):
 	def setUp(self):
 		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
 		self.browser = webdriver.Chrome()
-		self.login(self.browser)
+		self.login()
 		self.create_job()
 
   #--------------------------------------------------------------#
@@ -87,13 +87,6 @@ class ShoppingListPageTest(FunctionalTest):
 		new_shopping_list_model_object = Shopping_list_items.objects.filter(description='shopping list item 2').first()
 		SLI_pk = new_shopping_list_model_object.pk # SLI_pk = shopping list item pk
 
-		# Marek sees 'shopping list item 2' with the quantity '1' in the needed section of the job view for 200 Park Avenue
-		self.browser.get(self.live_server_url + reverse('job', kwargs={'job_id':'200ParkAvenue'}))
-		self.wait_for(lambda: self.browser.find_element_by_id('needed_panel'))
-		new_shopping_list_item = self.browser.find_element_by_id('needed_panel').find_element_by_id(f'needed_item_Shopping_list_items_{SLI_pk}')
-		self.assertIn('shopping list item 2', new_shopping_list_item.get_attribute("innerHTML"))
-		self.assertIn('X 1', new_shopping_list_item.get_attribute("innerHTML"))
-
 		# Marek then acquires the shopping list item in a shop and clicks 'acquired' in the shopping list view
 		self.browser.get(self.live_server_url + reverse('shopping_list'))
 		self.click(base_element=f'Shopping_list_items_{SLI_pk}', element=f'Shopping_list_items_{SLI_pk}_acquired_button')
@@ -109,7 +102,4 @@ class ShoppingListPageTest(FunctionalTest):
 		en_route_acquired_item = self.browser.find_element_by_id('en_route_panel').find_element_by_id(f'en_route_item_{AI_pk}') # x = Item.pk (remember, acuiring deletes the shopping list item and creates a new Items item)
 		self.assertIn('shopping list item 2', en_route_acquired_item.get_attribute("innerHTML"))
 		self.assertIn('ACQUIRED', en_route_acquired_item.get_attribute("innerHTML"))
-
-		# Marek also sees that 'shopping list item 2' no longer appears in the needed section
-		self.click('needed_panel_toggle')
-		self.wait_for(lambda: self.assertNotIn(f'needed_item_Shopping_list_items_{SLI_pk}', self.browser.page_source))
+		self.browser.refresh()

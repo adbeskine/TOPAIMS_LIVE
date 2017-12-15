@@ -53,7 +53,7 @@ class JobsViewTest(FunctionalTest):
 	def setUp(self):
 			Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
 			self.browser = webdriver.Chrome()
-			self.login(self.browser)
+			self.login()
 
 	#---------------------------------------------------------------------------------#
 

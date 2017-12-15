@@ -101,7 +101,7 @@ class HomePageTest(FunctionalTest):
 			now = settings.NOW
 			Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
 			self.browser = webdriver.Chrome()
-			self.login(self.browser)
+			self.login()
 			self.create_job()
 			job = Jobs.objects.filter(address='200 Park Avenue').first()
 			self.create_purchase_order_item('today 1', 'today fname 1', now, job)

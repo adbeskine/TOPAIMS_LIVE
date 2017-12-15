@@ -82,7 +82,7 @@ class JobViewTest(FunctionalTest):
 	def setUp(self):
 		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
 		self.browser = webdriver.Chrome()
-		self.login(self.browser)
+		self.login()
 		self.create_job()
 
 
@@ -106,6 +106,8 @@ class JobViewTest(FunctionalTest):
 		self.assertIn('Email - Tony@StarkIndustries.net', Profile.text)
 		self.assertIn('Phone - 01234567899', Profile.text)
 		self.assertIn('Quote', Profile.text)
+
+		self.browser.refresh()
 
 		# POST MVP def test_quote_link_goes_to_correct_cloud_space(self):
 			# Marek clicks the word quote and finds he is redirected to a cloud # service #DAVID NEED TO SET THIS UP 	
@@ -138,11 +140,6 @@ class JobViewTest(FunctionalTest):
 		self.click_menu_button()
 		self.click('Quote_status_change')	
 		self.wait_for(lambda: self.assertIn('WHITE_PROFILE_BOX', self.browser.page_source))
-
-
-
-
-	
 
 
 
@@ -239,60 +236,44 @@ class JobViewTest(FunctionalTest):
 			item_1 = self.browser.find_element_by_id('schedule_item_1')
 			self.assertTrue(item_2.location['y'] < item_1.location['y']) #remember, y=0 is the top of the screen, furthest away items at the bottom
 	
-			# Time passes and it 7 days away from item1's schedule date, the item is in the needed category of the site management panel
-			with self.settings(NOW = one_month_future_date - timedelta(days=7)):
-				self.browser.refresh()
-				self.wait_for(lambda: self.browser.find_element_by_id(f'needed_item_Scheduled_items_{new_item.pk}'))
-			
-	
-			# Time passes and it is 1 day until the item1's scheduled date, Marek now sees the first scheduled item highlighted in green in the schedule of items and the second item is also in the 'needed' category of the site management panel
-			with self.settings(NOW = one_month_future_date-timedelta(days=1)):
-				self.browser.get(self.live_server_url + reverse('job', kwargs={'job_id':'200ParkAvenue'}))
-				item_1 = self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_1'))
-				item_2 = self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_2'))
-	
-				self.wait_for(lambda: self.assertIn('bg-success', item_1.get_attribute('class')))
-				self.browser.find_element_by_id('needed_item_Scheduled_items_2')
-	
 			# Marek decides that actually the first item can wait a few more days so decides to change it's place in the schedule, he clicks on the date, a window appears and he changes the date to make it two days further into the future
 	
-				self.click('schedule_item_1_date')
-				modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal_1'))
+			self.click('schedule_item_1_date')
+			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal'))
 
-				update_date_1_day=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_day'))
-				update_date_1_day.select_by_value(str(one_month_future_date_plus_one.day+14))
+			update_date_1_day=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_day'))
+			update_date_1_day.select_by_value(str(one_month_future_date_plus_one.day+14))
 
-				update_date_1_year=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_year'))
-				update_date_1_year.select_by_value(str(one_month_future_date_plus_one.year))
+			update_date_1_year=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_year'))
+			update_date_1_year.select_by_value(str(one_month_future_date_plus_one.year))
 
-				update_date_1_month=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_month'))
-				update_date_1_month.select_by_value(str(one_month_future_date_plus_one.month))
+			update_date_1_month=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_month'))
+			update_date_1_month.select_by_value(str(one_month_future_date_plus_one.month))
 				
 				
-				self.click(base_element='date_form_modal_1', element='schedule_item_update_button')
+			self.click(base_element='date_form_modal', element='schedule_item_update_button')
 	
 	
 			# The page refreshes and marek sees the changed item appears above the second (more recently scheduled) item and it is no longer highglighted in green
-				item_2 = self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_2'))
-				item_1 = self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_1'))
-				self.wait_for(lambda: self.assertTrue(item_2.location['y'] < item_1.location['y'])) #item one is now the furthest away so item2 should appear on top
-				self.wait_for(lambda: self.assertNotIn('bg-success', item_1.get_attribute('class')))
+			item_2 = self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_2'))
+			item_1 = self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_1'))
+			self.wait_for(lambda: self.assertTrue(item_2.location['y'] < item_1.location['y'])) #item one is now the furthest away so item2 should appear on top
 	
 			# Marek decides to delete item1 altogether, he clicks the item date and sees a tab for delete, he clicks the delete tab
 			self.click('schedule_item_1_date')
-			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal_1'))
+			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal'))
 
-			self.click(base_element='date_form_modal_1', element='delete_tab_1')
+			self.click(base_element='date_form_modal', element='delete_tab_toggle')
 			# Marek changes his mind, clicks cancel and the modal closes, nothing is deleted
-			self.click(base_element='date_form_modal_1', element='close_modal_1')
+			self.click(base_element='date_form_modal', element='close_modal')
 			self.wait_for(lambda: self.browser.find_element_by_id('schedule_item_1'))
 	
 			# Marek clicks to delete item1 again, this time clicks 'yes' and is redirected back to the job view, with item1 no longer present
 			self.click('schedule_item_1_date')
-			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal_1'))
+			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal'))
 
-			self.click(base_element='date_form_modal_1', element='delete_tab_1')
-			self.click(base_element='date_form_modal_1', element='schedule_item_1_delete')
+			self.click(base_element='date_form_modal', element='delete_tab_toggle')
+			self.click(base_element='date_form_modal', element='schedule_item_delete')
 			self.wait_for(lambda: self.assertNotIn('schedule_item_1', self.browser.page_source))
 
 		#POST MVP
@@ -322,43 +303,42 @@ class JobViewTest(FunctionalTest):
 		new_item = Scheduled_items.objects.filter(description='test itemm 1').first()
 
 
-		# Marek sees a scheduled item in the needed column and decides to make a purchase order.
-		needed = self.wait_for(lambda: self.browser.find_element_by_id('needed_panel'))
-		self.wait_for(lambda: self.browser.find_element_by_id(f'needed_item_Scheduled_items_{new_item.pk}')) #because normal items and scheduled items will be here the names will be model_pk
+		# Marek sees a scheduled item in the scheduled item panel and decides to make a purchase order.
+		self.wait_for(lambda: self.browser.find_element_by_id(f'schedule_item_{new_item.pk}'))
 		# He clicks on the purchase order button and finds a modal pops up with a purchase order form
 		self.click(f'needed_item_Scheduled_items_{new_item.pk}_PO')
-		self.wait_for(lambda: self.browser.find_element_by_id(f'purchase_order_modal_Scheduled_items_{new_item.pk}'))
+		self.wait_for(lambda: self.assertTrue(self.browser.find_element_by_id('purchase_order_modal').is_displayed()))
 
 		# Marek sees that the purchase order has an item pre-filled in with the description, job and quantity
-		self.wait_for(lambda: self.assertTrue(self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').is_displayed()))
-		PO_form = self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}')
+		PO_form = self.browser.find_element_by_id('purchase_order_modal')
 		self.assertIn('200 Park Avenue', PO_form.get_attribute("innerHTML"))
 		
-		PO_item_1_form = self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('item1')
-		self.assertIn('1', PO_item_1_form.get_attribute("innerHTML"))
+		PO_item_1_form = self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('item1')
+		self.assertIn(f'value="{new_item.quantity}"', PO_item_1_form.get_attribute("innerHTML"))
 		self.assertIn('test itemm 1', PO_item_1_form.get_attribute("innerHTML"))
 		# Marek fills the rest of the form
-		self.slow_type(base_element=f'PO_form_Scheduled_items_{new_item.pk}', element='item_1_fullname_input', string='test item 1 fullname') # god only knows why this was so buggy but was causing a flickering test when done at full speed
+		self.slow_type(base_element='purchase_order_modal', element='item_1_fullname_input', string='test item 1 fullname') # god only knows why this was so buggy but was causing a flickering test when done at full speed
 
 		# select delivery location
-		delivery_location_1 = Select(self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('item_1_delivery_location_input'))
+		delivery_location_1 = Select(self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('item_1_delivery_location_input'))
 		delivery_location_1.select_by_value('shop')
 		# select delivery date one week from current date
-		delivery_date_day=Select(self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('id_item_1_delivery_date_day'))
+		delivery_date_day=Select(self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('id_item_1_delivery_date_day'))
 		delivery_date_day.select_by_value(str(next_week.day))
 
-		delivery_date_year=Select(self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('id_item_1_delivery_date_year'))
+		delivery_date_year=Select(self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('id_item_1_delivery_date_year'))
 		delivery_date_year.select_by_value(str(next_week.year))
 
-		delivery_date_month=Select(self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('id_item_1_delivery_date_month'))
+		delivery_date_month=Select(self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('id_item_1_delivery_date_month'))
 		delivery_date_month.select_by_value(str(next_week.month))
 
 
-		self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('item_1_price_input').send_keys('100')
-		self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('supplier_input').send_keys('Stark Industries')
-		self.browser.find_element_by_id(f'PO_form_Scheduled_items_{new_item.pk}').find_element_by_id('supplier_ref_input').send_keys('test item 1 reference')
-		# Marek clicks create and is redirected back to the job view
-		self.click(base_element=f'PO_form_Scheduled_items_{new_item.pk}', element=f'Scheduled_items_{new_item.pk}_create_PO')
+		self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('item_1_price_input').send_keys('100')
+		self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('supplier_input').send_keys('Stark Industries')
+		self.browser.find_element_by_id('purchase_order_modal').find_element_by_id('supplier_ref_input').send_keys('test item 1 reference')
+		
+		# Marek clicks create, the purchase order is created and he is redirected back to the job view
+		self.click(base_element='purchase_order_modal', element='create_PO')
 		self.wait_for(lambda: self.assertEqual(self.browser.current_url, self.live_server_url + reverse('job', kwargs={'job_id':'200ParkAvenue'})))
 
 		new_ordered_item_model_object = Items.objects.filter(fullname='test item 1 fullname').first()
@@ -380,21 +360,21 @@ class JobViewTest(FunctionalTest):
 
 		# Marek clicks the date button and the modal comes up as before
 		self.click(f'schedule_item_{SI_pk}_date')
-		self.wait_for(lambda: self.assertTrue(self.browser.find_element_by_id(f'date_form_modal_{SI_pk}').is_displayed()))
+		self.wait_for(lambda: self.assertTrue(self.browser.find_element_by_id('date_form_modal').is_displayed()))
 
 		# Marek clicks the 'shopping list' tab and sees a standard shopping list form pop up in the modal
-		self.click(element=f'shopping_list_form_{SI_pk}_toggle')
-		self.wait_for(lambda: self.assertTrue(self.browser.find_element_by_id(f'date_form_modal_{SI_pk}').find_element_by_id(f'shopping_list_form_{SI_pk}').is_displayed()))
+		self.click(element=f'shopping_list_form_toggle')
+		self.wait_for(lambda: self.assertTrue(self.browser.find_element_by_id('date_form_modal').find_element_by_id(f'shopping_list_form').is_displayed()))
 
 		# Marek sees the shopping list form pre-filled with the item description, quantity and job
-		shopping_list_form = self.browser.find_element_by_id(f'date_form_modal_{SI_pk}').find_element_by_id(f'shopping_list_form_{SI_pk}')
+		shopping_list_form = self.browser.find_element_by_id('date_form_modal').find_element_by_id(f'shopping_list_form')
 
 		self.assertIn('schedule item -> shopping list', shopping_list_form.get_attribute("innerHTML"))
 		self.assertIn('1', shopping_list_form.get_attribute("innerHTML"))
 		self.assertIn('200 Park Avenue', shopping_list_form.get_attribute("innerHTML"))
 
 		# Marek sees this is all okay and clicks 'create'
-		self.click(base_element=f'date_form_modal_{SI_pk}', element='shopping_list_form_submit_button')
+		self.click(base_element='date_form_modal', element='shopping_list_form_submit_button')
 		self.wait_for(lambda: self.assertEquals(self.browser.current_url, self.live_server_url + reverse('shopping_list_create', kwargs={'function':'create'})))
 		self.wait_for(lambda: self.assertIn('schedule item -&gt; shopping list', self.browser.page_source))
 		new_shopping_list_item = Shopping_list_items.objects.filter(description='schedule item -> shopping list').first()

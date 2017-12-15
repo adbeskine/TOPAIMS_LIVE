@@ -81,7 +81,7 @@ class PurchaseOrderViewTest(FunctionalTest):
 		now = settings.NOW
 		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
 		self.browser = webdriver.Chrome()
-		self.login(self.browser)
+		self.login()
 		self.create_job()
 		
 	#---------------------------------------------------#

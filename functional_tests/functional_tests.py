@@ -23,5 +23,5 @@ os.system("python manage.py test functional_tests.test_purchase_order_view")
 os.system("echo DELETES TEST")
 os.system("python manage.py test functional_tests.test_deletes")
 
-# os.system("echo PERMISSIONS TEST")
-# os.system("python manage.py test functional_tests.test_permissons")
+os.system("echo PERMISSIONS TEST")
+os.system("python manage.py test functional_tests.test_permissions")

@@ -4,6 +4,6 @@ gunicorn==19.7.1
 psycopg2==2.7.3.2
 python-dateutil==2.6.1
 pytz==2017.3
-selenium==3.7.0
+selenium==3.8.0
 six==1.11.0
 whitenoise==3.3.1

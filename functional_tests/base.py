@@ -1,11 +1,12 @@
 from selenium import webdriver
-from sensitive import user_passwords, test_data
+from sensitive import test_data
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import time
 from home.models import Site_info
 from django.urls import reverse
 from selenium.webdriver.common.keys import Keys
+import time
 
 
 ########################
@@ -20,6 +21,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 		self.browser = webdriver.Chrome()
 
 	def tearDown(self):
+		self.browser.refresh()
 		self.browser.quit()
 
 	#----- HELPER METHODS -----#
@@ -32,29 +34,34 @@ class FunctionalTest(StaticLiveServerTestCase):
 				return func()
 			except(AssertionError, WebDriverException) as e:
 				if time.time() - start_time > MAX_WAIT:
+					self.browser.refresh()
 					raise e
 				time.sleep(0.5)
 
-	def login(self, browser): # <- keep for backwards compatability with older tests
-		browser.get(self.live_server_url + reverse('login'))
-		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
-		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+	def login(self): # <- keep for backwards compatability with older tests
+		self.browser.get(self.live_server_url + reverse('login'))
+		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
+		self.browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
+		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+		self.browser.refresh() # teardown issue when running on localhost, need to refresh before browser quits every time
 
-	def loginSuper(self, browser):
-		browser.get(self.live_server_url + reverse('login'))
-		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
-		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+	def loginSuper(self):
+		self.browser.get(self.live_server_url + reverse('login'))
+		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
+		self.browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
+		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+		self.browser.refresh()
 
-	def loginManager(self, browser):
-		browser.get(self.live_server_url + reverse('login'))
-		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(test_data['manager'])
-		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+	def loginManager(self):
+		self.browser.get(self.live_server_url + reverse('login'))
+		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
+		self.browser.find_element_by_id('passwordbox').send_keys(test_data['manager'])
+		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+		self.browser.refresh()
 
-	def loginStaff(self, browser):
-		browser.get(self.live_server_url + reverse('login'))
-		self.wait_for(lambda: browser.find_element_by_id('passwordbox'))
-		browser.find_element_by_id('passwordbox').send_keys(test_data['staff'])
-		browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+	def loginStaff(self):
+		self.browser.get(self.live_server_url + reverse('login'))
+		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
+		self.browser.find_element_by_id('passwordbox').send_keys(test_data['staff'])
+		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)
+		self.browser.refresh()

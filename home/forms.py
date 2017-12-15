@@ -36,7 +36,7 @@ class purchase_order_form(forms.Form):
 	item_1_job = forms.ModelChoiceField(queryset=Jobs.objects.all(), to_field_name="address", required=False, widget = forms.Select(attrs={'id':'item_1_job_input'})) # CHANGE LATER TO ONLY ACTIVE JOBS ON THIS
 	item_1_delivery_location = forms.ChoiceField(choices=(('shop', 'shop'),('site', 'site')), required=False, widget= forms.Select(attrs={'id':'item_1_delivery_location_input'})) # make it a radio widget, see docs on widgets
 	item_1_delivery_date = forms.DateField(required=False, widget = forms.SelectDateWidget(attrs={'id':'item_1_delivery_date_input'}))
-	item_1_quantity = forms.IntegerField(required=False, widget = forms.NumberInput(attrs={'id':'item_1_quantity_input'}))
+	item_1_quantity = forms.IntegerField(required=False, widget = forms.NumberInput(attrs={'id':'item_1_quantity_input', 'value':1}))
 
 	item_2_description = forms.CharField(required=False, widget = forms.TextInput(attrs={'id':'item_2_description_input'}))
 	item_2_fullname = forms.CharField(required=False, widget = forms.TextInput(attrs={'id':'item_2_fullname_input'}))
