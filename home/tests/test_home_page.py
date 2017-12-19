@@ -1,9 +1,15 @@
 from .base import Test
 from django.urls import reverse
-from home.forms import new_job_form
-from home.models import Notes, Jobs, Items, Site_info
 from datetime import date
 from dateutil.relativedelta import relativedelta
+
+from Jobs.forms import new_job_form
+
+from Notes.models import Notes
+from Jobs.models import Jobs
+from Item_Flow.models import Items
+from _Auth.models import Site_info
+
 
 now = date(year=2017, month=1, day=2) #so tests don't screw up when run on different days of the week make sure that now = a monday
 later_this_week = now+relativedelta(days=2)

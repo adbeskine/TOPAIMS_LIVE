@@ -2,13 +2,16 @@ from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from home.models import Site_info, Items, Shopping_list_items, Scheduled_items
 from django.urls import reverse
 from datetime import datetime, timedelta, date
 import time
 from selenium.webdriver.support.ui import Select
 from django.conf import settings
 NOW = settings.NOW
+
+from _Auth.models import Site_info
+from Item_Flow.models import Items, Scheduled_items
+from Shopping_list.models import Shopping_list_items
 
 
 class JobViewTest(FunctionalTest): 
@@ -241,13 +244,13 @@ class JobViewTest(FunctionalTest):
 			self.click('schedule_item_1_date')
 			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal'))
 
-			update_date_1_day=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_day'))
+			update_date_1_day=Select(self.browser.find_element_by_id('date_form_modal').find_element_by_id('id_update_date_1_day'))
 			update_date_1_day.select_by_value(str(one_month_future_date_plus_one.day+14))
 
-			update_date_1_year=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_year'))
+			update_date_1_year=Select(self.browser.find_element_by_id('date_form_modal').find_element_by_id('id_update_date_1_year'))
 			update_date_1_year.select_by_value(str(one_month_future_date_plus_one.year))
 
-			update_date_1_month=Select(self.browser.find_element_by_id('date_form_modal_1').find_element_by_id('id_update_date_1_month'))
+			update_date_1_month=Select(self.browser.find_element_by_id('date_form_modal').find_element_by_id('id_update_date_1_month'))
 			update_date_1_month.select_by_value(str(one_month_future_date_plus_one.month))
 				
 				

@@ -186,7 +186,7 @@
               <div class="card-body">
                 <p class="card-text">
                   {% if item.PO %}
-                    <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                    <a href="{% url 'purchase_orders' item.PO.id %}" id="po_link_item_{{ item.pk }}">
                   {% endif %}
                   {{ item.fullname }} </a>| status - {{ item.status }}
                   {% if item.delivery_date %} | delivery: {{item.delivery_date}}
@@ -213,7 +213,7 @@
             <div class="card-body">
               <p class="card-text">
                 {% if item.PO %}
-                  <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                  <a href="{% url 'purchase_orders' item.PO.id %}" id="po_link_item_{{ item.pk }}">
                 {% endif %}
                 {{ item.fullname }} </a>| x {{ item.quantity }}
                 {% if item.model == "Acquired_Item" %}
@@ -240,8 +240,6 @@
                   {{ purchase_order_form.Supplier }} <br>
                   {{ purchase_order_form.Supplier_ref.label }}<br>
                   {{ purchase_order_form.Supplier_ref }} <br>
-                  {{ purchase_order_form.order_no.label }}<br>
-                  {{ purchase_order_form.order_no }} <br>
                 </div>
               </div>
               <div class="card mb-2 border-danger">
@@ -497,8 +495,6 @@
               {{ purchase_order_form.Supplier }} <br>
               {{ purchase_order_form.Supplier_ref.label }}
               {{ purchase_order_form.Supplier_ref }} <br>
-              {{ purchase_order_form.order_no.label }}
-              {{ purchase_order_form.order_no }} <br>
               <br>
               <div class="card">
                 <div class="card-block text-justify" id="item1">

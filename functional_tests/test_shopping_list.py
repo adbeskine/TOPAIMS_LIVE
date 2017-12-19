@@ -3,9 +3,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from django.urls import reverse
-from home.models import Site_info, Items, Shopping_list_items
 from selenium.webdriver.support.ui import Select
 import time
+
+from _Auth.models import Site_info
+from Item_Flow.models import Items
+from Shopping_list.models import Shopping_list_items
 
 
 class ShoppingListPageTest(FunctionalTest):

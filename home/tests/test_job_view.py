@@ -1,12 +1,17 @@
-
 from .base import Test
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
-from home.models import Jobs, Notes, Site_info, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+
+from Jobs.models import Jobs
+from Notes.models import Notes
+from _Auth.models import Site_info
+from Item_Flow.models import Scheduled_items, Items, Purchase_orders
+from Shopping_list.models import Shopping_list_items
+
 
 title_1 = 'JARVIS disturbing workers'
 text_1 = "JARVIS keeps pestering the workers with 'suggestions', remind workers to be polite"
@@ -255,7 +260,7 @@ class JobViewScheduleOfItemsTest(JobViewTest):
 
 		self.assertEquals(PO.supplier, 'Stark Industries')
 		self.assertEquals(PO.supplier_ref, '0001')
-		self.assertEquals(PO.order_no, 1)
+		self.assertEquals(PO.id, 1)
 
 	def test_en_route_to_on_site(self):
 		new_shopping_list_item_data = {

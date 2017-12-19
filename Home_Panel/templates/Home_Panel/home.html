@@ -45,7 +45,7 @@
       						<div class="card-body">
       							<p class="card-text">
                       {% if item.PO %}
-                        <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                        <a href="{% url 'purchase_orders' item.PO.id %}" id="po_link_item_{{ item.pk }}">
                       {% endif %}
 
       								{{ item.fullname }}</a> x {{ item.quantity }}
@@ -78,7 +78,7 @@
       							<p class="card-text">
 
                       {% if item.PO %}
-                        <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                        <a href="{% url 'purchase_orders' item.PO.id %}" id="po_link_item_{{ item.pk }}">
                       {% endif %}
 
       								{{ item.fullname }}</a> x {{ item.quantity }}
@@ -111,7 +111,7 @@
       							<p class="card-text">
 
                       {% if item.PO %}
-                       <a href="{% url 'purchase_orders' item.PO.order_no %}" id="po_link_item_{{ item.pk }}">
+                       <a href="{% url 'purchase_orders' item.PO.id %}" id="po_link_item_{{ item.pk }}">
                       {% endif %}
 
       								{{ item.fullname }}</a> x {{ item.quantity }}
@@ -296,8 +296,8 @@
                   {{ purchase_order_form.Supplier }} <br>
                   {{ purchase_order_form.Supplier_ref.label }}<br>
                   {{ purchase_order_form.Supplier_ref }} <br>
-                  {{ purchase_order_form.order_no.label }}<br>
-                  {{ purchase_order_form.order_no }} <br>
+                  {{ purchase_order_form.id.label }}<br>
+                  {{ purchase_order_form.id }} <br>
                 </div>
               </div>
               <div class="card mb-2 border-danger">

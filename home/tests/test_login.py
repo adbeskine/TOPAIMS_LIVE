@@ -1,8 +1,8 @@
 from .base import Test
 from django.test import TestCase
-from sensitive import WEBSITE_PASSWORD as password
 from django.urls import reverse
-from home.models import Site_info
+
+from _Auth.models import Site_info
 
 class LoginPageTest(Test):
 
@@ -21,7 +21,7 @@ class LoginPageTest(Test):
 		response=self.client.get('/', follow=True)
 
 		self.assertRedirects(response, reverse('login'))
-		self.assertTemplateUsed(response, 'home/login.html')
+		self.assertTemplateUsed(response, '_Auth/login.html')
 
 	def test_logged_out_user_can_log_in(self):
 		response=self.client.get('/', follow=True)
@@ -36,8 +36,8 @@ class LoginPageTest(Test):
 		
 		response = self.post_correct_password()
 
-		self.assertTemplateNotUsed(response, 'home/login.html')
-		self.assertTemplateUsed(response, 'home/home.html')
+		self.assertTemplateNotUsed(response, '_Auth/login.html')
+		self.assertTemplateUsed(response, 'Home_Panel/home.html')
 
 
 	def test_incorrect_password_attempts_are_logged_correctly(self):
