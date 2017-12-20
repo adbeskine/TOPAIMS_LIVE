@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% if password_alert %}
+<h3> Incorrect password, {{password_alert}} attempts remaining</h3> <br>
+{% endif %}
+
+<h1>password</h1>
+
+<form action="{% url 'login' %}" method='post'>
+	{% csrf_token %}
+	<input type="password" id="passwordbox" name="password">
+</form>

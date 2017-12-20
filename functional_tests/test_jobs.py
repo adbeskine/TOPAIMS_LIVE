@@ -2,10 +2,12 @@ from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from home.models import Site_info, Items, Jobs
 from django.urls import reverse
 from selenium.webdriver.support.ui import Select
 
+from _Auth.models import Site_info
+from Jobs.models import Jobs
+from Item_Flow.models import Items
 
 class JobsViewTest(FunctionalTest):
 

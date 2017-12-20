@@ -1,0 +1,13 @@
+{% extends 'home/base.html' %}
+
+{% block title %}TopMarks - Purchase Orders {% endblock %}
+
+{% block content %}
+
+<form action="{% url 'purchase_orders_browser' %}" method="POST">
+	{% csrf_token %}
+	{{ purchase_order_choice_form }}
+	<input type="Submit" value="Go" id="purchase_order_number_submit_button">
+</form>
+
+{% endblock %}

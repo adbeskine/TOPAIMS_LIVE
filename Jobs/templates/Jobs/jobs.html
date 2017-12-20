@@ -1,0 +1,118 @@
+
+{% extends "home/base.html" %}
+{% block content %}
+
+
+<div class=container-fluid>
+	<div class="dropdown">
+  	<button class="btn btn-secondary dropdown-toggle" type="button" id="jobsDropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  		|||
+  	</button>
+  	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="jobsDropDown">
+  		{% if perm_level >= 3 %}
+    	<a class="dropdown-item" href="{% url 'delete_job' %}" id="delete_job_page_link">Delete Job</a>
+    	{% endif %}
+  		
+  	</div>
+	</div>
+
+	<div class="card border-black text-center" id="all_jobs_panel">
+
+		<div class="card_header">
+			<h1>JOBS</h1>
+		</div>
+
+		<div class="card body">
+
+			<!-- TABLIST -->
+
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#ongoing_jobs_panel" role="tab" id="ongoing_jobs_panel_toggle"> Ongoing </a>
+				</li>
+				{% if perm_level >= 2 %}
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#completed_jobs_panel" role="tab" id="completed_jobs_panel_toggle"> Completed </a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#quote_jobs_panel" role="tab" id="quote_jobs_panel_toggle"> Quotes </a>
+				</li>
+				{% endif %}
+			</ul>
+
+		<div class="tab-content">
+
+			<!-- ONGOING JOBS -->
+
+			<div class="tab-pane in active" id="ongoing_jobs_panel" role="tabpanel">
+
+				{% for job in ongoing_jobs %}
+					<a href="{% url 'job' job.job_id %}" id="job_link_{{ job.pk }}">
+						<div class="card border-black text-center">
+							<div class="card-body">
+	
+								<p class="card-text"> {{ job.address }} </p>
+	
+							</div>
+						</div>
+					</a>
+				{% endfor %}
+
+			</div>
+
+			<!-- COMPLETED JOBS -->
+
+
+			{% if perm_level >= 2 %}
+			<div class="tab-pane" id="completed_jobs_panel" role="tabpanel">
+
+				{% for job in completed_jobs %}
+					<a href="{% url 'job' job.job_id %}" id="job_link_{{ job.pk }}">
+						<div class="card border-black text-center">
+							<div class="card-body">
+	
+								<p class="card-text"> {{ job.address }}</p>
+	
+							</div>
+						</div>
+					</a>
+				{% endfor %}
+
+			</div>
+
+			<!-- QUOTES -->
+
+			<div class="tab-pane" id="quote_jobs_panel" role="tabpanel">
+
+					<a href="{% url 'new_job_form' %}" id="create_job_button">
+						<div class="card border-black text-center">
+							<div class="card-body">
+	
+								<p class="card-text"> NEW JOB </p>
+	
+							</div>
+						</div>
+					</a>
+
+				{% for job in quote_jobs %}
+					<a href="{% url 'job' job.job_id %}" id="job_link_{{ job.pk }}">
+						<div class="card border-black text-center">
+							<div class="card-body">
+	
+								<p class="card-text"> {{ job.address }}</p>
+	
+							</div>
+						</div>
+					</a>
+				{% endfor %}
+
+			</div>
+
+			{% endif %} <!-- perm level >= 2 -->
+
+		</div> <!-- tab content -->
+		</div><!-- JOBS card body -->
+	</div><!-- all jobs panel -->
+</div><!-- all screen container -->
+
+{% endblock %}

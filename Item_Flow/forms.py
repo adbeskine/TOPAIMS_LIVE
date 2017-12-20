@@ -1,19 +1,7 @@
 from django import forms
-from home.models import Jobs, Purchase_orders
 
-
-
-
-class new_job_form(forms.Form):
-	Name = forms.CharField(widget = forms.TextInput(attrs={'id':'Name'}))
-	Email = forms.CharField(widget = forms.TextInput(attrs={'id':'Email'}))
-	Phone = forms.CharField(widget = forms.TextInput(attrs={'id':'Phone'}))
-	Address = forms.CharField(widget = forms.TextInput(attrs={'id':'Address'}))
-	Note = forms.CharField(widget = forms.TextInput(attrs={'id':'Note'}))
-
-class new_note_form(forms.Form):
-	Title = forms.CharField(widget = forms.TextInput(attrs={'id':'Title_input'}))
-	Text = forms.CharField(widget = forms.TextInput(attrs={'id':'Note_input'}))
+from Jobs.models import Jobs
+from Item_Flow.models import Purchase_orders
 
 class new_scheduled_item_form(forms.Form):
 	description = forms.CharField(widget = forms.TextInput(attrs={'id':'schedule_item_name_input'}))
@@ -28,7 +16,6 @@ class update_scheduled_item_date_form(forms.Form):
 class purchase_order_form(forms.Form):
 	Supplier = forms.CharField(widget= forms.TextInput(attrs={'id':'supplier_input'}))
 	Supplier_ref = forms.CharField(widget= forms.TextInput(attrs={'id':'supplier_ref_input'}))
-	order_no = forms.ModelChoiceField(queryset=Purchase_orders.objects.all(), required=False, disabled=True)
 
 	item_1_description = forms.CharField(required=False, widget = forms.TextInput(attrs={'id':'item_1_description_input'}))
 	item_1_fullname = forms.CharField(required=False, widget = forms.TextInput(attrs={'id':'item_1_fullname_input'}))
@@ -110,24 +97,12 @@ class purchase_order_form(forms.Form):
 	item_10_delivery_date = forms.DateField(required=False, widget = forms.SelectDateWidget(attrs={'id':'item_10_delivery_date_input'}))
 	item_10_quantity = forms.IntegerField(required=False, widget = forms.NumberInput(attrs={'id':'item_10_quantity_input'}))
 
-
-class new_shopping_list_item_form(forms.Form):
-	description = forms.CharField(widget = forms.TextInput(attrs={'id':'shopping_list_description_input'}))
-	quantity = forms.IntegerField(widget = forms.NumberInput(attrs={'id':'shopping_list_quantity_input'}))
-	job = forms.ModelChoiceField(queryset=Jobs.objects.all(), to_field_name="address", widget=forms.Select(attrs={'id':'shopping_list_job_input'}))
-
 class reject_delivery_form(forms.Form):
 	note = forms.CharField()
 	reschedule_date = forms.DateField(required=False, widget=forms.SelectDateWidget)
 
 class purchase_order_choice_form(forms.Form):
-	purchase_order_number = forms.ModelChoiceField(queryset=Purchase_orders.objects.all(), to_field_name="order_no", widget=forms.Select(attrs={'id':'purchase_order_number_input'}))
-
-class delete_job_form(forms.Form):
-	job_deletion_selection = forms.ModelChoiceField(queryset=Jobs.objects.all(), to_field_name="address", widget = forms.Select(attrs={'id':'delete_job_choice_input'}))
-	security_field_1 = forms.CharField(widget = forms.TextInput(attrs={'id':'security_field_1'}))
-	security_field_2 = forms.CharField(widget = forms.TextInput(attrs={'id':'security_field_2'}))
+	purchase_order_number = forms.ModelChoiceField(queryset=Purchase_orders.objects.all(), to_field_name="id", widget=forms.Select(attrs={'id':'purchase_order_number_input'}))
 
 class update_PO_supplier_ref_form(forms.Form):
 	new_supplier_ref = forms.CharField()
-

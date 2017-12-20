@@ -2,12 +2,18 @@ from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-from home.models import Site_info, Jobs, Notes, Scheduled_items, Purchase_orders, Items, Shopping_list_items
 from django.urls import reverse
 from selenium.webdriver.support.ui import Select
 from django.conf import settings
 from dateutil.relativedelta import relativedelta
 from datetime import date
+
+from _Auth.models import Site_info
+from Jobs.models import Jobs
+from Notes.models import Notes
+from Item_Flow.models import Scheduled_items, Purchase_orders, Items
+from Shopping_list.models import Shopping_list_items
+
 
 class DeletesTest(FunctionalTest):
 
@@ -564,7 +570,7 @@ class DeletesTest(FunctionalTest):
 	
 		# He clicks on the items name and is redirected to the purchase order view in which the item is contained
 		self.click(f'po_link_item_{purchase_order_item_to_delete.pk}')
-		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':purchase_order_item_to_delete.PO.order_no}), self.browser.current_url))
+		self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':purchase_order_item_to_delete.PO.id}), self.browser.current_url))
 		purchase_order_url = self.browser.current_url
 		# on the far right hand side of the item's row is a 'del' hyperlink. he clicks it, the page refreshes and the item is delieted
 		self.click(base_element=f'PO_item_{purchase_order_item_to_delete.pk}', element='delete_po_item_button')
@@ -648,12 +654,12 @@ class DeletesTest(FunctionalTest):
 		job2_purchase_order_1 = Purchase_orders.objects.filter(supplier_ref='job 2 po 1').first()
 		job2_purchase_order_2 = Purchase_orders.objects.filter(supplier_ref='job 2 po 2').first()
 	
-		self.browser.get(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':job2_purchase_order_1.order_no}))
+		self.browser.get(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':job2_purchase_order_1.id}))
 		self.wait_until_visible('purchase_order_table')
 	
 		self.assertIn('601 Chiron Building', self.browser.find_element_by_id('purchase_order_table').get_attribute("innerHTML"))
 	
-		self.browser.get(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':job2_purchase_order_2.order_no}))
+		self.browser.get(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':job2_purchase_order_2.id}))
 		self.wait_until_visible('purchase_order_table')
 	
 		self.assertIn('601 Chiron Building', self.browser.find_element_by_id('purchase_order_table').get_attribute("innerHTML"))

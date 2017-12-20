@@ -3,10 +3,11 @@ from sensitive import test_data
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
 import time
-from home.models import Site_info
 from django.urls import reverse
 from selenium.webdriver.common.keys import Keys
 import time
+
+from _Auth.models import Site_info
 
 
 ########################

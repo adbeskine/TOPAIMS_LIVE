@@ -1,0 +1,10 @@
+{% extends "home/base.html" %}
+{% block title %}TopMarks - New Job Form{% endblock %}
+
+{% block content %}
+  <form action="{% url 'new_job_form' %}" method="post" id="new_job_form">
+  	{% csrf_token %}
+  	{{ form }}
+  	<input type="submit" value="CREATE" id="create" />
+  </form>
+{% endblock %}
