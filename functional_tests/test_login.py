@@ -6,8 +6,8 @@ from selenium.common.exceptions import NoSuchElementException
 from sensitive import test_data
 from django.test import tag
 from django.urls import reverse
+from home.models import Site_info
 
-from _Auth.models import Site_info
 
 class LoginTest(FunctionalTest):
 
@@ -71,7 +71,6 @@ class LoginTest(FunctionalTest):
 			self.incorrect_login()
 			self.wait_for(lambda: self.assertIn(f'Incorrect password, {a} attempts remaining', self.browser.page_source))
 			a -= 1
-		self.browser.refresh()
 
 
 	@tag('lockdown')

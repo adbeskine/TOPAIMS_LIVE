@@ -1,10 +1,7 @@
 from .base import Test
 from django.urls import reverse
-
-from Notes.models import Notes
-from Jobs.models import Jobs
-
-from Jobs.forms import new_job_form
+from home.forms import new_job_form
+from home.models import Notes, Jobs
 
 class JobsTest(Test):
 
@@ -41,6 +38,6 @@ class JobsTest(Test):
 		self.assertEquals(job_notes.first().Text, "don't ignore JARVIS, he's temperemental and finds it rude" )
 
 		self.assertRedirects(response, reverse('job', kwargs={'job_id': '200ParkAvenue'}))
-		self.assertTemplateUsed(response, 'Jobs_Panel/job.html')
+		self.assertTemplateUsed(response, 'home/job.html')
 		self.assertEquals(response.status_code, 200)
 

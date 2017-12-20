@@ -22,7 +22,7 @@ class Notes(models.Model):
 	Title = models.CharField(max_length=100, default='')
 	Text = models.TextField(default='')
 	Timestamp = models.DateTimeField(auto_now_add=True)
-	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs, null=True) # RECOVER FKEY
+	job = models.ForeignKey(Jobs, null=True)
 	model = models.CharField(default='Notes', max_length=100)
 
 	class Meta:
@@ -33,7 +33,7 @@ class Scheduled_items(models.Model):
 	date_1 = models.DateField(default=timezone.now)
 	date_2 = models.DateField(default=date_1)
 	quantity = models.IntegerField(default=1)
-	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs) # RECOVER FKEY
+	job = models.ForeignKey(Jobs)
 	model = models.CharField(default='Scheduled_items', max_length=100)
 
 class Purchase_orders(models.Model):
@@ -54,15 +54,20 @@ class Items(models.Model):
 	order_date = models.CharField(max_length=100, default='')
 	delivery_date = models.CharField(max_length=100, default='') #
 	quantity = models.IntegerField(default=1)
-	PO = models.IntegerField(blank=True, null=True) # models.ForeignKey(Purchase_orders, blank=True, null=True) # RECOVER FKEY
-	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs, blank=True, null=True) # RECOVER FKEY
+	PO = models.ForeignKey(Purchase_orders, blank=True, null=True)
+	job = models.ForeignKey(Jobs, blank=True, null=True)
 	model = models.CharField(default='Items', max_length=100)
 
 class Shopping_list_items(models.Model):
 	description = models.CharField(max_length=100, default='')
 	quantity = models.IntegerField(default=1)
-	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs) # RECOVER FKEY
+	job = models.ForeignKey(Jobs)
 	model = models.CharField(default='Shopping_list_items', max_length=100)
+
+
+
+
+
 
 
 # Create your models here.

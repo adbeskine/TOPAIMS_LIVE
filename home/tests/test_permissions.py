@@ -1,12 +1,7 @@
 from .base import Test
 from django.urls import reverse
 from django.conf import settings
-
-from _Auth.models import Site_info
-from Jobs.models import Jobs
-from Notes.models import Notes
-from Item_Flow.models import Scheduled_items, Purchase_orders, Items
-from Shopping_list.models import Shopping_list_items
+from home.models import Site_info, Jobs, Notes, Scheduled_items, Purchase_orders, Items, Shopping_list_items
 
 
 class PermissionsTest(Test):
@@ -250,7 +245,7 @@ class PermissionsTest(Test):
 		
 		self.check_get_redirects(urlname=reverse('new_job_form'))
 
-		self.check_get_redirects(urlname=reverse('purchase_orders', kwargs={'order_no':PO_item.PO.id}))
+		self.check_get_redirects(urlname=reverse('purchase_orders', kwargs={'order_no':PO_item.PO.order_no}))
 
 		self.check_get_redirects(urlname=reverse('purchase_orders_browser'))
 

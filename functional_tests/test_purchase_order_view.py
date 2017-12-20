@@ -2,15 +2,12 @@ from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from home.models import Site_info, Items, Jobs, Purchase_orders
 from django.urls import reverse
 from selenium.webdriver.support.ui import Select
 from django.conf import settings
 from dateutil.relativedelta import relativedelta
 from datetime import date
-
-from _Auth.models import Site_info
-from Item_Flow.models import Items, Purchase_orders
-from Jobs.models import Jobs
 
 
 class PurchaseOrderViewTest(FunctionalTest):
@@ -95,19 +92,19 @@ class PurchaseOrderViewTest(FunctionalTest):
 			# Marek makes three purchase orders for Tony Stark
 			job = Jobs.objects.filter(address='200 Park Avenue').first()
 			self.create_purchase_order_item('today 1', 'today fname 1', now, job, supplier_ref='1')
-			today_1_order_no = Purchase_orders.objects.filter(supplier_ref='1').first().id
+			today_1_order_no = Purchase_orders.objects.filter(supplier_ref='1').first().order_no
 			today_1_item = Items.objects.filter(description='today 1').first()
 	
 			self.create_purchase_order_item('today 2', 'today fname 2', now+relativedelta(days=2), job, supplier_ref='2')
-			today_2_order_no = Purchase_orders.objects.filter(supplier_ref='2').first().id
+			today_2_order_no = Purchase_orders.objects.filter(supplier_ref='2').first().order_no
 			today_2_item = Items.objects.filter(description='today 2').first()
 	
 			self.create_purchase_order_item('today 3', 'today fname 3', now, job, supplier_ref='3')
-			today_3_order_no = Purchase_orders.objects.filter(supplier_ref='3').first().id
+			today_3_order_no = Purchase_orders.objects.filter(supplier_ref='3').first().order_no
 			today_3_item = Items.objects.filter(description='today 3').first()
 	
 			self.create_purchase_order_item('today 4', 'today fname 4', now+relativedelta(days=20), job, supplier_ref='4')
-			today_4_order_no = Purchase_orders.objects.filter(supplier_ref='4').first().id
+			today_4_order_no = Purchase_orders.objects.filter(supplier_ref='4').first().order_no
 			today_4_item = Items.objects.filter(description='today 4').first() # REFRACT the only reason this is here is because 
 			# there needs to be an item in the 'all deliveries' section and the third item gets marked as delivered before the tests run on the homepage.
 			# refract to get change the order of the tests so the test for the 'all deliveries' and the 'on site' panel gets run on today 3 and eliminating the need
@@ -207,7 +204,7 @@ class PurchaseOrderViewTest(FunctionalTest):
 	
 			self.click(f'po_link_item_{today_1_item.pk}')
 	
-			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_1_item.PO.id}), self.browser.current_url))
+			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_1_item.PO.order_no}), self.browser.current_url))
 	
 			# Marek goes back to the home page and clicks an item in the 'this week' panel
 			self.browser.get(self.live_server_url+reverse('homepage'))
@@ -218,7 +215,7 @@ class PurchaseOrderViewTest(FunctionalTest):
 	
 			self.click(f'po_link_item_{today_2_item.pk}')
 	
-			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_2_item.PO.id}), self.browser.current_url))
+			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_2_item.PO.order_no}), self.browser.current_url))
 
 			# Marek goes back to the home page and clicks an item on the 'all deliveries' panel
 			self.browser.get(self.live_server_url+reverse('homepage'))
@@ -229,6 +226,6 @@ class PurchaseOrderViewTest(FunctionalTest):
 	
 			self.click(f'po_link_item_{today_4_item.pk}')
 	
-			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_4_item.PO.id}), self.browser.current_url))			
+			self.wait_for(lambda: self.assertEqual(self.live_server_url+reverse('purchase_orders', kwargs={'order_no':today_4_item.PO.order_no}), self.browser.current_url))			
 
 

@@ -1,13 +1,7 @@
 from .base import Test
 from django.urls import reverse
 from django.conf import settings
-
-from _Auth.models import Site_info
-from Jobs.models import Jobs
-from Notes.models import Notes
-from Item_Flow.models import Scheduled_items, Purchase_orders, Items
-from Shopping_list.models import Shopping_list_items
-
+from home.models import Site_info, Jobs, Notes, Scheduled_items, Purchase_orders, Items, Shopping_list_items
 
 class DeletesTest(Test):
 

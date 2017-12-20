@@ -33,13 +33,6 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'home',
-    'Home_Panel',
-    'Jobs_Panel',
-    '_Auth',
-    'Item_Flow',
-    'Jobs',
-    'Notes',
-    'Shopping_list',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -146,4 +139,3 @@ NOW = date.today()
 import dj_database_url
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
-
