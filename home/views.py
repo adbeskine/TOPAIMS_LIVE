@@ -3,26 +3,14 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib import messages
+from sensitive import WEBSITE_PASSWORD as password
+from sensitive import user_passwords
 from .models import Site_info, Jobs, Notes, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import os, random, string, re
 from home.forms import delete_job_form, new_job_form, new_note_form, new_scheduled_item_form, update_scheduled_item_date_form, purchase_order_form, purchase_order_choice_form, new_shopping_list_item_form, reject_delivery_form, update_PO_supplier_ref_form
 import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-
-WEBSITE_PASSWORD = 'password'
-
-user_passwords = {
-	'passwordstaff':'staff',
-	'passwordmanager':'manager',
-	'passwordsuper':'super',
-}
-
-test_data = {
-	'staff':'passwordstaff',
-	'manager':'passwordmanager',
-	'super':'passwordsuper'
-}
 
 
 # Create your views here.
