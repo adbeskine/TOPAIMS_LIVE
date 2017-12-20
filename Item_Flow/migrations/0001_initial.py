@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('home', '0002_auto_20171220_0943')
     ]
 
     state_operations = [
