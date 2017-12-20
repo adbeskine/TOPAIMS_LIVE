@@ -22,7 +22,7 @@ class Notes(models.Model):
 	Title = models.CharField(max_length=100, default='')
 	Text = models.TextField(default='')
 	Timestamp = models.DateTimeField(auto_now_add=True)
-	job = models.ForeignKey(Jobs, null=True)
+	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs, null=True)
 	model = models.CharField(default='Notes', max_length=100)
 
 	class Meta:
@@ -33,16 +33,16 @@ class Scheduled_items(models.Model):
 	date_1 = models.DateField(default=timezone.now)
 	date_2 = models.DateField(default=date_1)
 	quantity = models.IntegerField(default=1)
-	job = models.ForeignKey(Jobs)
+	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs)
 	model = models.CharField(default='Scheduled_items', max_length=100)
 
 class Purchase_orders(models.Model):
 	supplier = models.CharField(max_length=100, default='')
 	supplier_ref = models.CharField(max_length=100, default='')
-	order_no = models.AutoField(primary_key=True)
+	id = models.AutoField(primary_key=True)
 
 	def __str__(self):
-		return f'{self.order_no + 4000}'
+		return f'{self.id + 4000}'
 
 
 class Items(models.Model):
@@ -54,14 +54,14 @@ class Items(models.Model):
 	order_date = models.CharField(max_length=100, default='')
 	delivery_date = models.CharField(max_length=100, default='') #
 	quantity = models.IntegerField(default=1)
-	PO = models.ForeignKey(Purchase_orders, blank=True, null=True)
-	job = models.ForeignKey(Jobs, blank=True, null=True)
+	PO = models.IntegerField(blank=True, null=True) # models.ForeignKey(Purchase_orders, blank=True, null=True)
+	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs, blank=True, null=True)
 	model = models.CharField(default='Items', max_length=100)
 
 class Shopping_list_items(models.Model):
 	description = models.CharField(max_length=100, default='')
 	quantity = models.IntegerField(default=1)
-	job = models.ForeignKey(Jobs)
+	job = models.IntegerField(blank=True, null=True) # models.ForeignKey(Jobs)
 	model = models.CharField(default='Shopping_list_items', max_length=100)
 
 
