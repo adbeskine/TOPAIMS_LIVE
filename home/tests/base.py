@@ -1,7 +1,7 @@
 from django.test import TestCase
 from sensitive import user_passwords, test_data
 from django.urls import reverse
-from home.models import Site_info
+from _Auth.models import Site_info
 
 class Test(TestCase):
 

@@ -1,7 +1,11 @@
 from .base import Test
 from django.urls import reverse
 from django.conf import settings
-from home.models import Site_info, Items, Purchase_orders, Jobs
+
+from _Auth.models import Site_info
+from Item_Flow.models import Items, Purchase_orders
+from Jobs.models import Jobs
+
 
 class PurchaseOrderViewTest(Test):
 	
@@ -47,11 +51,11 @@ class PurchaseOrderViewTest(Test):
 		# this is where the user can browser all the different po numbers
 		response = self.client.get(reverse('purchase_orders_browser'))
 
-		self.assertTemplateUsed(response, 'home/purchase_orders.html')
+		self.assertTemplateUsed(response, 'Item_Flow/purchase_orders.html')
 
 	def test_specific_purchase_order_view(self):
 		item = Items.objects.filter(description='testitem1 desc').first()
 		
-		response = self.client.get(reverse('purchase_orders', kwargs={'order_no':item.PO.order_no}))
+		response = self.client.get(reverse('purchase_orders', kwargs={'order_no':item.PO.id}))
 
-		self.assertTemplateUsed(response, 'home/purchase_order.html')
+		self.assertTemplateUsed(response, 'Item_Flow/purchase_order.html')

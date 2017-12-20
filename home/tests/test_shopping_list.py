@@ -2,9 +2,15 @@ from .base import Test
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
-from home.models import Jobs, Notes, Site_info, Scheduled_items, Items, Purchase_orders, Shopping_list_items
 import time
 from datetime import datetime, timedelta
+
+from Jobs.models import Jobs
+from Notes.models import Notes
+from _Auth.models import Site_info
+from Item_Flow.models import Scheduled_items, Items, Purchase_orders
+from Shopping_list.models import Shopping_list_items
+
 
 class ShoppingListTest(Test):
 
@@ -32,7 +38,7 @@ class ShoppingListTest(Test):
 	def test_shopping_list_page(self):
 
   		response = self.client.get(reverse('shopping_list'))
-  		self.assertTemplateUsed(response, 'home/shopping_list.html')
+  		self.assertTemplateUsed(response, 'Shopping_list/shopping_list.html')
 
 	def test_shopping_list_CRUD(self):
 
