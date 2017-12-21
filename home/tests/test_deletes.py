@@ -225,7 +225,7 @@ class DeletesTest(Test):
 
 	def setUp(self):
 		now = settings.NOW
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
+		self.setup_system()
 		self.login()
 
 		# Job 1

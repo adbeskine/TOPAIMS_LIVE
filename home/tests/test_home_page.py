@@ -60,7 +60,7 @@ class HomePageTests(Test):
 	#-- SETUP AND TEARDOWN --#
 
 	def setUp(self):
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
+		self.setup_system()
 		self.login()
 		self.create_job()
 		self.create_purchase_order_item('today 1', 'today fname 1', now, job=Jobs.objects.filter(job_id='200ParkAvenue').first())

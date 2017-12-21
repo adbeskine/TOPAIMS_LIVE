@@ -40,7 +40,7 @@ class PurchaseOrderViewTest(Test):
 
 	def setUp(self):
 		now = settings.NOW
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
+		self.setup_system()
 		self.login()
 		self.create_job()
 		self.create_purchase_order_item('testitem1 desc', 'testitem1 fullname', now, job=Jobs.objects.filter(job_id='200ParkAvenue').first())

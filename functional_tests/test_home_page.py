@@ -101,8 +101,7 @@ class HomePageTest(FunctionalTest):
 	def setUp(self):
 		with self.settings(NOW = date(year=2017, month=1, day=2)): # stops the tests screwing up, make sure now is a monday (so now + a few days == later THIS week)
 			now = settings.NOW
-			Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
-			self.browser = webdriver.Chrome()
+			self.setup_system()
 			self.login()
 			self.create_job()
 			job = Jobs.objects.filter(address='200 Park Avenue').first()

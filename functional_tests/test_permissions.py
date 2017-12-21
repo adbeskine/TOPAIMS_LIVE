@@ -434,8 +434,7 @@ class PermissionsTest(FunctionalTest):
 			now = settings.NOW
 			twodays = now+relativedelta(days=2)
 			twoweeks = now+relativedelta(weeks=2)
-			Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
-			self.browser = webdriver.Chrome()
+			self.setup_system()
 			self.loginSuper()
 
 			# admin notes

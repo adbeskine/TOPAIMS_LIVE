@@ -3,11 +3,10 @@ import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from sensitive import test_data
 from django.test import tag
 from django.urls import reverse
 
-from _Auth.models import Site_info
+from _Auth.models import Site_info, Pass
 
 class LoginTest(FunctionalTest):
 
@@ -16,7 +15,7 @@ class LoginTest(FunctionalTest):
 	def correct_login(self): 
 		# to be used on the login screen
 		self.wait_for(lambda: self.browser.find_element_by_id('passwordbox'))
-		self.browser.find_element_by_id('passwordbox').send_keys(test_data['super'])
+		self.browser.find_element_by_id('passwordbox').send_keys(Pass.objects.filter(user='super').first().password)
 		self.browser.find_element_by_id('passwordbox').send_keys(Keys.ENTER)	
 
 	def incorrect_login(self):
@@ -57,8 +56,6 @@ class LoginTest(FunctionalTest):
 
 	@tag('incorrect_password_counter')
 	def test_incorrect_password_gives_correct_error(self):
-		self.tearDown()
-		self.setUp()
 		# Yousif navigates to the home page and inputs the incorrect password
 		self.browser.get(self.live_server_url)
 		self.incorrect_login()

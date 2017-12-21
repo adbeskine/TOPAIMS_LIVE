@@ -34,8 +34,7 @@ class ShoppingListPageTest(FunctionalTest):
 	#-- SETUP AND TEARDOWN --#
 
 	def setUp(self):
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
-		self.browser = webdriver.Chrome()
+		self.setup_system()
 		self.login()
 		self.create_job()
 

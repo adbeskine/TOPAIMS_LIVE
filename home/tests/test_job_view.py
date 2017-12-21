@@ -48,7 +48,7 @@ class JobViewProfileTests(JobViewTest):
 		self.assertRedirects(response, reverse('job', kwargs={'job_id': job_id}))
 	#-- SETUP AND TEARDOWN --#
 	def setUp(self):
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
+		self.setup_system()
 		self.login()
 		self.create_job()
 
@@ -83,7 +83,7 @@ class JobViewNotesTests(JobViewTest):
 		self.assertRedirects(response, reverse('job', kwargs={'job_id':job_id}))
 	#-- SETUP AND TEARDOWN --#
 	def setUp(self):
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
+		self.setup_system()
 		self.login()
 		self.create_job()
 
@@ -119,7 +119,7 @@ class JobViewScheduleOfItemsTest(JobViewTest):
 
 
 	def setUp(self):
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
+		self.setup_system()
 		self.login()
 		self.create_job()
 

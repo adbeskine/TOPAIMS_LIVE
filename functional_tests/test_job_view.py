@@ -83,8 +83,7 @@ class JobViewTest(FunctionalTest):
 		#-- SETUP AND TEARDOWN --#
 
 	def setUp(self):
-		Site_info.objects.create(locked=False, password='thischangesautomaticallyaftereverylock')
-		self.browser = webdriver.Chrome()
+		self.setup_system()
 		self.login()
 		self.create_job()
 
@@ -240,12 +239,12 @@ class JobViewTest(FunctionalTest):
 			self.assertTrue(item_2.location['y'] < item_1.location['y']) #remember, y=0 is the top of the screen, furthest away items at the bottom
 	
 			# Marek decides that actually the first item can wait a few more days so decides to change it's place in the schedule, he clicks on the date, a window appears and he changes the date to make it two days further into the future
-	
+
 			self.click('schedule_item_1_date')
-			modal = self.wait_for(lambda: self.browser.find_element_by_id('date_form_modal'))
+			self.wait_for(lambda: self.browser.find_element_by_id('id_update_date_1_day'))
 
 			update_date_1_day=Select(self.browser.find_element_by_id('date_form_modal').find_element_by_id('id_update_date_1_day'))
-			update_date_1_day.select_by_value(str(one_month_future_date_plus_one.day+14))
+			update_date_1_day.select_by_value(str(22)) # hopefully this fixes a strange flickering issue where on this line the 'element was not visible' or something...
 
 			update_date_1_year=Select(self.browser.find_element_by_id('date_form_modal').find_element_by_id('id_update_date_1_year'))
 			update_date_1_year.select_by_value(str(one_month_future_date_plus_one.year))
