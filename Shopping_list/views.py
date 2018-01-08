@@ -10,6 +10,10 @@ from Shopping_list.models import Shopping_list_items
 
 def shopping_list(request, function=None): #acquired will post to pk link
 
+	# there are only two places where the shopping list form is visible to the user, in the shopping list page or on the homepage.
+	# This function handles the shopping list page as well as the creation of new shopping list items from both the home page's form and the shopping list page's form.
+	# NOTE - this breaks SRP, needs refracting.
+
 	if request.method == 'POST':
 		if function == 'create':
 
@@ -24,7 +28,7 @@ def shopping_list(request, function=None): #acquired will post to pk link
 					quantity = quantity,
 					job = job
 					)
-		elif function == 'create_homepage':
+		elif function == 'create_homepage': # seperated here so that it redirects back to home page
 			form = new_shopping_list_item_form(request.POST)
 			if form.is_valid():
 				description = form.cleaned_data['description']

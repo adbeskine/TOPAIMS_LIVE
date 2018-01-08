@@ -73,7 +73,7 @@ class HomePageTests(Test):
 	
 	def test_delivered_items_update_statuses(self):
 
-		# correct item
+		# correct item - mark showroom
 		correct_arrived_item = Items.objects.filter(description='today 1').first()
 
 		self.client.get(reverse('mark_showroom', kwargs={'pk':correct_arrived_item.pk}))

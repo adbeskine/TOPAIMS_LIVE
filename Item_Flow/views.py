@@ -297,7 +297,7 @@ def delete(request, model=None, pk=None):
 				item.delete()
 	
 			elif model == 'Acquired_Item':
-				item = Items.objects.filter(pk=pk).first()
+				item = Items.objects.filter(pk=pk).first() # REFRACT - del buttons on 'acquired items' should go straight to delete model=Items
 				item.delete()
 	
 			elif model == 'Items':
